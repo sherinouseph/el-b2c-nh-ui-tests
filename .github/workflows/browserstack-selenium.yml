@@ -24,6 +24,12 @@ jobs:
         with:
           name: artifact-test-report-${{matrix.profile}}
           path: target/surefire-reports
+      -name: Publish Test Report
+       uses: scacap/action-surefire-report@v1
+       if: always()
+       with:
+           github_token:${{ secrets.GITHUB_TOKEN }}
+
 #
 # browser: [chrome]
 #  test_chrome_bstack:
