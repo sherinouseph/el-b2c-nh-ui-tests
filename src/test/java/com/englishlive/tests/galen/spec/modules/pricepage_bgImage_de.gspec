@@ -1,0 +1,21 @@
+#------------------------------------------------------------------------------------------
+# DE price page check bg image is there section speck
+# Date : 10/05/2017
+#
+#------------------------------------------------------------------------------------------
+#
+@objects
+    bgimage    css      .background-image
+    packages    css     .packages
+#
+#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+= bgimage =
+     @on desktop
+         bgimage:
+             visible
+             #image file /imagecompare/baseimage/dePriceBgImage.png,  error 1%, filter blur 7
+             image file /imagecompare/baseimage/dePriceBgImage3.png, analyze-offset 10, filter blur 2, stretch, tolerance 10, error 20%
+             #, stretch, tolerance 40
+

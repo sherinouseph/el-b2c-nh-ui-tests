@@ -1,0 +1,19 @@
+{
+  "GatewayType": "Cybersource",
+  "RefNumber": "123456",
+  "Email": "fred@soapui.test",
+  "Amount": 0,
+  "Currency": "BRL",
+  "ExtraInfo": 
+   {
+      "country":"BR",
+      "ccFirstName":"Fred",
+      "ccLastName":"Feng",
+      "ccNumber":"378282246310005",
+      "ccCardVerifyNum":"1234",
+      "ccCardType":"003",
+      "ccExpYear":"2030",
+      "ccExpMonth":"12"
+    },
+  "User_id": 1287
+}

@@ -1,0 +1,21 @@
+#------------------------------------------------------------------------------------------
+# Check CRM form image new user
+# Date : 26/05/2017
+#
+#------------------------------------------------------------------------------------------
+#
+@objects
+    formset_iner-*    css      .formset .inner
+
+#
+#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+= newUserForm =
+     @on desktop
+         formset_iner-1:
+             visible
+             image file /imagecompare/baseimage/CrmMagicNewUser.png,  error 10%, analyze-offset 5, filter blur 2
+             #, analyze-offset 10, filter blur 4
+
+

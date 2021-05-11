@@ -1,0 +1,1344 @@
+
+
+use url_monitoring;
+
+CREATE TABLE  stats_users(
+    u_name  varchar(100),
+    u_email varchar(100),
+    u_pass  varchar(40)
+);
+
+insert into stats_users values ("Nikol Marku", "nikol.marku@ef.com","kozare") ;
+insert into stats_users values ("Vahid Pourahmary", "Vahid.Pourahmary@EF.com","vahid") ;
+insert into stats_users values ("Rene Villegas", "rene.villegas@EF.com","villegas") ;
+select * from stats_users;
+
+// find average for week
+ /*String SELECT_MONITSTATS_lAST_FULL_WEEK_SQL =
+ SELECT r.date, r.r_id, t.t_id, c.countryCode, c.countryName ,t.TestName, t.url,  AVG(tr.loadtime)
+ from countries c, test t, run r, testrun tr
+ where r.date > "2015-11-27"
+ AND r.date < "2015-12-03"
+ AND r.r_id=tr.r_id
+ AND t.t_id= tr.t_id
+ AND t.c_id=c.c_id
+ group by t.t_id;*/
+
+/**
+ +---------------------+------+------+-------------+----------------+--------------+-----------------------------------+----------+
+ | date                | r_id | t_id | countryCode | countryName    | TestName     | url                               | loadtime |
+ +---------------------+------+------+-------------+----------------+--------------+-----------------------------------+----------+
+ | 2015-11-11 00:00:00 |    8 |    2 | AM          | Armenia        | UK_HomePage2 | http://www.englishtown.com/en-gb/ |   10.657 |
+ */
+//String SELECT_MAX_TABLE_ID_SQL = "SELECT MAX(?) FROM ?";
+
+/**
+ STATISTICS
+ Select t_id, AVG(loadtime)
+ from testrun
+ //where t_ID=5
+ group by t_id;
+
+ */
+
+/**
+// TC agent sql is on C:\Program Files\MySQL\MySQL Server 5.7\bin
+ CREATE DATABASE url_monitoring;
+ CREATE USER 'java'@'localhost' IDENTIFIED BY 'password';
+ GRANT ALL ON url_monitoring.* TO 'java'@'localhost' IDENTIFIED BY 'password';
+ Yes, java is the username and password is the password here.
+// root and password
+ mysql --user=java --password url_monitoring
+ mysql> show tables;
+ +--------------------------+
+ | Tables_in_url_monitoring |
+ +--------------------------+
+ | countries                |
+ | run                      |
+ | test                     |
+ | testrun                  |
+ +--------------------------+
+ 4 rows in set (0.00 sec)
+
+ mysql>
+
+ CREATE TABLE IF NOT EXISTS Test (
+ t_ID int NOT NULL AUTO_INCREMENT,
+ TestName varchar(55) NOT NULL,
+ url varchar(255),
+ note varchar(255),
+ c_id int(5),
+ PRIMARY KEY (t_ID),
+ FOREIGN KEY (c_id) REFERENCES countries(c_id)
+ );
+ UPDATE test SET url = REPLACE(url, 'http', 'https') WHERE url LIKE '%member%';
+
+ //2015-11-11  NO hour ...!
+ CREATE TABLE IF NOT EXISTS NikolRun (
+   r_ID int NOT NULL AUTO_INCREMENT,
+   date DATETIME ,
+   PRIMARY KEY (r_ID)
+ );
+
+
+//(3,3)
+ CREATE TABLE IF NOT EXISTS TestRun (
+ r_ID int,
+ t_ID int,
+ loadtime FLOAT,
+ PRIMARY KEY (r_ID, t_ID),
+ FOREIGN KEY (r_ID) REFERENCES Run (r_ID),
+ FOREIGN KEY (t_ID) REFERENCES Test(t_ID)
+ );//TODO udate with performance timing
+
+ ALTER  TABLE testrun
+    ADD ptNavigationStart BIGINT,
+    ADD ptConnectStart BIGINT,
+    ADD ptRequestStart BIGINT,
+    ADD ptResponseStart BIGINT,
+    ADD ptDomLoading BIGINT,
+    ADD ptDomInteractive BIGINT,
+    ADD ptDomComplete BIGINT,
+    ADD ptLoadEventEnd BIGINT,
+    ADD ptNetworkLatency BIGINT,
+    ADD ptPageLoadOnceReceivedFromServer BIGINT,
+    ADD ptTimeToDomInteractive BIGINT,
+    ADD ptTimeToDomComplete BIGINT,
+    ADD ptDomCompleteProcessingTime BIGINT;
+
+
+        // calculated values
+        protected long networkLatency ;                 // responseEnd - fetchStart
+        protected long pageLoadOnceReceivedFromServer ; // loadEventEnd - responseEnd
+        protected long domCompleteProcessingTime ;      // domComplete - responseEnd
+        protected long timeToDomComplete ;              // domComplete - navigationStart;
+        protected long timeToSpinnerWay ;               // spinnerGoesWayTime - navigationStart
+        protected long timeToDomInteractive;           // domInteractive - navigationStart
+
+
+ CREATE VIEW TEST_STATS AS
+ SELECT r.date, r.r_id, t.t_id, c.countryCode, c.countryName ,t.TestName, t.url, tr.loadtime
+ from countries c, test t, run r, testrun tr
+ where r.r_id=tr.r_id
+ and t.t_id= tr.t_id
+ and t.c_id=c.c_id
+ ORDER BY R.R_ID;
+
+ // average view   -- created on local :
+ // TODO crete on TC, update sql
+ CREATE VIEW TEST_STATS_AVG_ALL AS
+ SELECT r.r_id, t.t_id, c.countryCode, c.countryName , t.url, AVG(tr.loadtime) Load_Time_Average
+ from countries c, test t, run r, testrun tr
+ where r.r_id=tr.r_id
+ AND t.t_id= tr.t_id
+ AND t.c_id=c.c_id
+ group by t.t_id;
+
+ // r.date > "2015-11-27" AND r.date < "2015-12-03"
+
+ // inserts   /6 AL   YYYY-MM-DD HH:MI:SS "2015-10-25 13:10:25"
+ INSERT INTO Test (TestName, url, c_id) VALUES("UK_HomePage", "http://www.englishtown.com/en-gb/", 6);
+
+ INSERT INTO NikolRun (date) VALUES(NOW());
+
+ //TEST
+ INSERT INTO TestRun (r_ID, t_ID, loadtime) VALUES(1, 1, 6);
+ INSERT INTO TestRun (r_ID, t_ID, loadtime) VALUES(1, 2, 16);
+
+ Select * from Test, Run, TestRun Where TestRun.r_ID=Run.r_id AND TestRun.t_ID=Test.t_id;
+ mysql> Select * from Test, Run, TestRun Where TestRun.r_ID=Run.r_id AND TestRun.t_ID=Test.t_id;
+ +------+--------------+-----------------------------------+------+------+------+---------------------+------+------+------+----------+
+ | t_ID | TestName     | url                               | note | c_id | r_ID | date                | note | r_ID | t_ID | loadtime |
+ +------+--------------+-----------------------------------+------+------+------+---------------------+------+------+------+----------+
+ |    1 | UK_HomePage  | http://www.englishtown.com/en-gb/ | NULL |    6 |    1 | 2015-10-30 16:02:03 | NULL |    1 |    1 |        6 |
+ |    2 | UK_HomePage2 | http://www.englishtown.com/en-gb/ | NULL |    7 |    1 | 2015-10-30 16:02:03 | NULL |    1 |    2 |       16 |
+ +------+--------------+-----------------------------------+------+------+------+---------------------+------+------+------+----------+
+
+ Select Test.TestName, Test.url,Run.r_ID, Run.date, TestRun.loadtime from Test, Run, TestRun
+ Where TestRun.r_ID=Run.r_id AND TestRun.t_ID=Test.t_id;
+ +--------------+-----------------------------------+------+---------------------+----------+
+ | TestName     | url                               | r_ID | date                | loadtime |
+ +--------------+-----------------------------------+------+---------------------+----------+
+ | UK_HomePage  | http://www.englishtown.com/en-gb/ |    1 | 2015-10-30 16:02:03 |        6 |
+ | UK_HomePage2 | http://www.englishtown.com/en-gb/ |    1 | 2015-10-30 16:02:03 |       16 |
+ +--------------+-----------------------------------+------+---------------------+----------+
+
+
+ select r.r_id, t.t_id, t.url, c.countryCode, c.countryName , tr.loadtime
+ from countries c, test t, run r, testrun tr
+ where r.r_id=tr.r_id
+ and t.t_id= tr.t_id
+ and t.c_id=c.c_id;
+ +------+------+-----------------------------------+-------------+-------------+----------+
+ | r_id | t_id | url                               | countryCode | countryName | loadtime |
+ +------+------+-----------------------------------+-------------+-------------+----------+
+ |    5 |    2 | http://www.englishtown.com/en-gb/ | AM          | Armenia     |     9.90 |
+ +------+------+-----------------------------------+-------------+-------------+----------+
+ 1 row in set (0.00 sec)
+
+ select c.countryCode, c.countryName ,t.TestName, t.url, tr.loadtime
+ from countries c, test t, run r, testrun tr
+ where r.r_id=tr.r_id
+ and t.t_id= tr.t_id
+ and t.c_id=c.c_id;
+ +-------------+-------------+-----------------------------------+----------+
+ | countryCode | countryName | url                               | loadtime |
+ +-------------+-------------+-----------------------------------+----------+
+ | AM          | Armenia     | http://www.englishtown.com/en-gb/ |     9.90 |
+ +-------------+-------------+-----------------------------------+----------+
+ CREATE VIEW TEST_STATS AS
+ SELECT r.date, r.r_id, t.t_id, c.countryCode, c.countryName ,t.TestName, t.url, tr.loadtime
+  from countries c, test t, run r, testrun tr
+  where r.r_id=tr.r_id
+  and t.t_id= tr.t_id
+  and t.c_id=c.c_id
+  ORDER BY R.R_ID;
+
+ +---------------------+------+------+-------------+----------------+--------------+-----------------------------------+----------+
+ | date                | r_id | t_id | countryCode | countryName    | TestName     | url                               | loadtime |
+ +---------------------+------+------+-------------+----------------+--------------+-----------------------------------+----------+
+ | 2015-11-11 00:00:00 |    8 |    2 | AM          | Armenia        | UK_HomePage2 | http://www.englishtown.com/en-gb/ |   10.657 |
+
+ mysql>
+
+ mysql>
+// test data
+
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/en-wws/lp/oe/automation-test-01-general-english-v1111/?ctr=fi",  (Select c_id from countries WHERE countryCode="fi" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/fr-wws/lp/oe/automation-test-01-lp-private-teacher/?ctr=pf",  (Select c_id from countries WHERE countryCode="pf" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://englishlive.ef.com/en-wws/lp/oe/automation-test-01-general-english-v1111/?ctr=lc",  (Select c_id from countries WHERE countryCode="lc" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/ar-wws/buy/default/member/?ctr=sa&offerid=9502",  (Select c_id from countries WHERE countryCode="sa" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/fr-wws/buy/default/member/?ctr=be&offerid=2006",  (Select c_id from countries WHERE countryCode="be" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/de-wws/buy/default/member/?ctr=at&offerid=2006",  (Select c_id from countries WHERE countryCode="at" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/en-wws/buy/default/member/?ctr=in&offerid=2006",  (Select c_id from countries WHERE countryCode="in" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/es-us/buy/default/member/",  (Select c_id from countries WHERE countryCode="us" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/en-us/buy/default/member/",  (Select c_id from countries WHERE countryCode="us" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/en-us/",  (Select c_id from countries WHERE countryCode="us" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/zh-tw/buy/default/member/",  (Select c_id from countries WHERE countryCode="tw" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/zh-tw/",  (Select c_id from countries WHERE countryCode="tw" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/tr-tr/lp/os/general-english-v1/",  (Select c_id from countries WHERE countryCode="tr" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/tr-tr/buy/default/member/",  (Select c_id from countries WHERE countryCode="tr" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/tr-tr/",  (Select c_id from countries WHERE countryCode="tr" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/th-th/buy/default/member/",  (Select c_id from countries WHERE countryCode="th" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/th-th/",  (Select c_id from countries WHERE countryCode="th" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/en-se/buy/default/member/",  (Select c_id from countries WHERE countryCode="se" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/ar-sa/lp/os/toefl-0111/",  (Select c_id from countries WHERE countryCode="sa" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/ar-sa/buy/default/member/",  (Select c_id from countries WHERE countryCode="sa" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/ar-sa/",  (Select c_id from countries WHERE countryCode="sa" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/ru-ru/buy/default/member/",  (Select c_id from countries WHERE countryCode="ru" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.ru/",  (Select c_id from countries WHERE countryCode="ru" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/es-pe/",  (Select c_id from countries WHERE countryCode="pe" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/es-mx/lp/os/lplearnenglishonline/",  (Select c_id from countries WHERE countryCode="mx" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/es-mx/buy/default/member/",  (Select c_id from countries WHERE countryCode="mx" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/es-mx/",  (Select c_id from countries WHERE countryCode="mx" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/ko-kr/buy/default/member/",  (Select c_id from countries WHERE countryCode="kr" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/ko-kr/",  (Select c_id from countries WHERE countryCode="kr" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.co.jp/buy/default/member/",  (Select c_id from countries WHERE countryCode="jp" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.co.jp/",  (Select c_id from countries WHERE countryCode="jp" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.it/it-it/lp/os/business-1/",  (Select c_id from countries WHERE countryCode="it" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.it/buy/default/member/",  (Select c_id from countries WHERE countryCode="it" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.it/",  (Select c_id from countries WHERE countryCode="it" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/id-id/",  (Select c_id from countries WHERE countryCode="id" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/en-gb/lp/os/automation-test-learn-english-online-02/",  (Select c_id from countries WHERE countryCode="gb" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/en-gb/buy/default/member/",  (Select c_id from countries WHERE countryCode="gb" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/en-gb/",  (Select c_id from countries WHERE countryCode="gb" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.fr/buy/default/member/",  (Select c_id from countries WHERE countryCode="fr" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.fr/",  (Select c_id from countries WHERE countryCode="fr" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.es/lp/os/learn-english-online-01/",  (Select c_id from countries WHERE countryCode="es" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.es/buy/default/member/",  (Select c_id from countries WHERE countryCode="es" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.es/",  (Select c_id from countries WHERE countryCode="es" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/de-de/lp/os/automation-test-01-stwt/",  (Select c_id from countries WHERE countryCode="de" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.de/lp/os/01-stwt1/",  (Select c_id from countries WHERE countryCode="de" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.de/buy/default/member/",  (Select c_id from countries WHERE countryCode="de" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.de/",  (Select c_id from countries WHERE countryCode="de" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://englishlive.ef.com/es-co/lp/oe/promo-upgrade-g/",  (Select c_id from countries WHERE countryCode="co" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://englishlive.ef.com/es-co/",  (Select c_id from countries WHERE countryCode="co" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com.br/lp/ee/ee_abr14/",  (Select c_id from countries WHERE countryCode="br" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com.br/buy/default/member/",  (Select c_id from countries WHERE countryCode="br" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com.br/",  (Select c_id from countries WHERE countryCode="br" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/es-ar", (Select c_id from countries WHERE countryCode="ar") ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/ar-wws/lp/ee/10001/?ctr=om", ((Select c_id from countries WHERE countryCode="om" ) ) ;
+
+
+ //http://peric.github.io/GetCountries/
+ CREATE TABLE IF NOT EXISTS countries (
+ c_id int(5) NOT NULL AUTO_INCREMENT,
+ countryCode char(2) NOT NULL DEFAULT '',
+ countryName varchar(45) NOT NULL DEFAULT '',
+ currencyCode char(3) DEFAULT NULL,
+ PRIMARY KEY (c_id)
+ );
+ //ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=0;
+
+ INSERT INTO countries (countryCode, countryName, currencyCode) VALUES
+ ('AD', 'Andorra', 'EUR'),
+ ('AE', 'United Arab Emirates', 'AED'),
+ ('AF', 'Afghanistan', 'AFN'),
+ ('AG', 'Antigua and Barbuda', 'XCD'),
+ ('AI', 'Anguilla', 'XCD'),
+ ('AL', 'Albania', 'ALL'),
+ ('AM', 'Armenia', 'AMD'),
+ ('AO', 'Angola', 'AOA'),
+ ('AQ', 'Antarctica', ''),
+ ('AR', 'Argentina', 'ARS'),
+ ('AS', 'American Samoa', 'USD'),
+ ('AT', 'Austria', 'EUR'),
+ ('AU', 'Australia', 'AUD'),
+ ('AW', 'Aruba', 'AWG'),
+ ('AX', 'Åland', 'EUR'),
+ ('AZ', 'Azerbaijan', 'AZN'),
+ ('BA', 'Bosnia and Herzegovina', 'BAM'),
+ ('BB', 'Barbados', 'BBD'),
+ ('BD', 'Bangladesh', 'BDT'),
+ ('BE', 'Belgium', 'EUR'),
+ ('BF', 'Burkina Faso', 'XOF'),
+ ('BG', 'Bulgaria', 'BGN'),
+ ('BH', 'Bahrain', 'BHD'),
+ ('BI', 'Burundi', 'BIF'),
+ ('BJ', 'Benin', 'XOF'),
+ ('BL', 'Saint Barthélemy', 'EUR'),
+ ('BM', 'Bermuda', 'BMD'),
+ ('BN', 'Brunei', 'BND'),
+ ('BO', 'Bolivia', 'BOB'),
+ ('BQ', 'Bonaire', 'USD'),
+ ('BR', 'Brazil', 'BRL'),
+ ('BS', 'Bahamas', 'BSD'),
+ ('BT', 'Bhutan', 'BTN'),
+ ('BV', 'Bouvet Island', 'NOK'),
+ ('BW', 'Botswana', 'BWP'),
+ ('BY', 'Belarus', 'BYR'),
+ ('BZ', 'Belize', 'BZD'),
+ ('CA', 'Canada', 'CAD'),
+ ('CC', 'Cocos [Keeling] Islands', 'AUD'),
+ ('CD', 'Democratic Republic of the Congo', 'CDF'),
+ ('CF', 'Central African Republic', 'XAF'),
+ ('CG', 'Republic of the Congo', 'XAF'),
+ ('CH', 'Switzerland', 'CHF'),
+ ('CI', 'Ivory Coast', 'XOF'),
+ ('CK', 'Cook Islands', 'NZD'),
+ ('CL', 'Chile', 'CLP'),
+ ('CM', 'Cameroon', 'XAF'),
+ ('CN', 'China', 'CNY'),
+ ('CO', 'Colombia', 'COP'),
+ ('CR', 'Costa Rica', 'CRC'),
+ ('CU', 'Cuba', 'CUP'),
+ ('CV', 'Cape Verde', 'CVE'),
+ ('CW', 'Curacao', 'ANG'),
+ ('CX', 'Christmas Island', 'AUD'),
+ ('CY', 'Cyprus', 'EUR'),
+ ('CZ', 'Czech Republic', 'CZK'),
+ ('DE', 'Germany', 'EUR'),
+ ('DJ', 'Djibouti', 'DJF'),
+ ('DK', 'Denmark', 'DKK'),
+ ('DM', 'Dominica', 'XCD'),
+ ('DO', 'Dominican Republic', 'DOP'),
+ ('DZ', 'Algeria', 'DZD'),
+ ('EC', 'Ecuador', 'USD'),
+ ('EE', 'Estonia', 'EUR'),
+ ('EG', 'Egypt', 'EGP'),
+ ('EH', 'Western Sahara', 'MAD'),
+ ('ER', 'Eritrea', 'ERN'),
+ ('ES', 'Spain', 'EUR'),
+ ('ET', 'Ethiopia', 'ETB'),
+ ('FI', 'Finland', 'EUR'),
+ ('FJ', 'Fiji', 'FJD'),
+ ('FK', 'Falkland Islands', 'FKP'),
+ ('FM', 'Micronesia', 'USD'),
+ ('FO', 'Faroe Islands', 'DKK'),
+ ('FR', 'France', 'EUR'),
+ ('GA', 'Gabon', 'XAF'),
+ ('GB', 'United Kingdom', 'GBP'),
+ ('GD', 'Grenada', 'XCD'),
+ ('GE', 'Georgia', 'GEL'),
+ ('GF', 'French Guiana', 'EUR'),
+ ('GG', 'Guernsey', 'GBP'),
+ ('GH', 'Ghana', 'GHS'),
+ ('GI', 'Gibraltar', 'GIP'),
+ ('GL', 'Greenland', 'DKK'),
+ ('GM', 'Gambia', 'GMD'),
+ ('GN', 'Guinea', 'GNF'),
+ ('GP', 'Guadeloupe', 'EUR'),
+ ('GQ', 'Equatorial Guinea', 'XAF'),
+ ('GR', 'Greece', 'EUR'),
+ ('GS', 'South Georgia and the South Sandwich Islands', 'GBP'),
+ ('GT', 'Guatemala', 'GTQ'),
+ ('GU', 'Guam', 'USD'),
+ ('GW', 'Guinea-Bissau', 'XOF'),
+ ('GY', 'Guyana', 'GYD'),
+ ('HK', 'Hong Kong', 'HKD'),
+ ('HM', 'Heard Island and McDonald Islands', 'AUD'),
+ ('HN', 'Honduras', 'HNL'),
+ ('HR', 'Croatia', 'HRK'),
+ ('HT', 'Haiti', 'HTG'),
+ ('HU', 'Hungary', 'HUF'),
+ ('ID', 'Indonesia', 'IDR'),
+ ('IE', 'Ireland', 'EUR'),
+ ('IL', 'Israel', 'ILS'),
+ ('IM', 'Isle of Man', 'GBP'),
+ ('IN', 'India', 'INR'),
+ ('IO', 'British Indian Ocean Territory', 'USD'),
+ ('IQ', 'Iraq', 'IQD'),
+ ('IR', 'Iran', 'IRR'),
+ ('IS', 'Iceland', 'ISK'),
+ ('IT', 'Italy', 'EUR'),
+ ('JE', 'Jersey', 'GBP'),
+ ('JM', 'Jamaica', 'JMD'),
+ ('JO', 'Jordan', 'JOD'),
+ ('JP', 'Japan', 'JPY'),
+ ('KE', 'Kenya', 'KES'),
+ ('KG', 'Kyrgyzstan', 'KGS'),
+ ('KH', 'Cambodia', 'KHR'),
+ ('KI', 'Kiribati', 'AUD'),
+ ('KM', 'Comoros', 'KMF'),
+ ('KN', 'Saint Kitts and Nevis', 'XCD'),
+ ('KP', 'North Korea', 'KPW'),
+ ('KR', 'South Korea', 'KRW'),
+ ('KW', 'Kuwait', 'KWD'),
+ ('KY', 'Cayman Islands', 'KYD'),
+ ('KZ', 'Kazakhstan', 'KZT'),
+ ('LA', 'Laos', 'LAK'),
+ ('LB', 'Lebanon', 'LBP'),
+ ('LC', 'Saint Lucia', 'XCD'),
+ ('LI', 'Liechtenstein', 'CHF'),
+ ('LK', 'Sri Lanka', 'LKR'),
+ ('LR', 'Liberia', 'LRD'),
+ ('LS', 'Lesotho', 'LSL'),
+ ('LT', 'Lithuania', 'EUR'),
+ ('LU', 'Luxembourg', 'EUR'),
+ ('LV', 'Latvia', 'EUR'),
+ ('LY', 'Libya', 'LYD'),
+ ('MA', 'Morocco', 'MAD'),
+ ('MC', 'Monaco', 'EUR'),
+ ('MD', 'Moldova', 'MDL'),
+ ('ME', 'Montenegro', 'EUR'),
+ ('MF', 'Saint Martin', 'EUR'),
+ ('MG', 'Madagascar', 'MGA'),
+ ('MH', 'Marshall Islands', 'USD'),
+ ('MK', 'Macedonia', 'MKD'),
+ ('ML', 'Mali', 'XOF'),
+ ('MM', 'Myanmar [Burma]', 'MMK'),
+ ('MN', 'Mongolia', 'MNT'),
+ ('MO', 'Macao', 'MOP'),
+ ('MP', 'Northern Mariana Islands', 'USD'),
+ ('MQ', 'Martinique', 'EUR'),
+ ('MR', 'Mauritania', 'MRO'),
+ ('MS', 'Montserrat', 'XCD'),
+ ('MT', 'Malta', 'EUR'),
+ ('MU', 'Mauritius', 'MUR'),
+ ('MV', 'Maldives', 'MVR'),
+ ('MW', 'Malawi', 'MWK'),
+ ('MX', 'Mexico', 'MXN'),
+ ('MY', 'Malaysia', 'MYR'),
+ ('MZ', 'Mozambique', 'MZN'),
+ ('NA', 'Namibia', 'NAD'),
+ ('NC', 'New Caledonia', 'XPF'),
+ ('NE', 'Niger', 'XOF'),
+ ('NF', 'Norfolk Island', 'AUD'),
+ ('NG', 'Nigeria', 'NGN'),
+ ('NI', 'Nicaragua', 'NIO'),
+ ('NL', 'Netherlands', 'EUR'),
+ ('NO', 'Norway', 'NOK'),
+ ('NP', 'Nepal', 'NPR'),
+ ('NR', 'Nauru', 'AUD'),
+ ('NU', 'Niue', 'NZD'),
+ ('NZ', 'New Zealand', 'NZD'),
+ ('OM', 'Oman', 'OMR'),
+ ('PA', 'Panama', 'PAB'),
+ ('PE', 'Peru', 'PEN'),
+ ('PF', 'French Polynesia', 'XPF'),
+ ('PG', 'Papua New Guinea', 'PGK'),
+ ('PH', 'Philippines', 'PHP'),
+ ('PK', 'Pakistan', 'PKR'),
+ ('PL', 'Poland', 'PLN'),
+ ('PM', 'Saint Pierre and Miquelon', 'EUR'),
+ ('PN', 'Pitcairn Islands', 'NZD'),
+ ('PR', 'Puerto Rico', 'USD'),
+ ('PS', 'Palestine', 'ILS'),
+ ('PT', 'Portugal', 'EUR'),
+ ('PW', 'Palau', 'USD'),
+ ('PY', 'Paraguay', 'PYG'),
+ ('QA', 'Qatar', 'QAR'),
+ ('RE', 'Réunion', 'EUR'),
+ ('RO', 'Romania', 'RON'),
+ ('RS', 'Serbia', 'RSD'),
+ ('RU', 'Russia', 'RUB'),
+ ('RW', 'Rwanda', 'RWF'),
+ ('SA', 'Saudi Arabia', 'SAR'),
+ ('SB', 'Solomon Islands', 'SBD'),
+ ('SC', 'Seychelles', 'SCR'),
+ ('SD', 'Sudan', 'SDG'),
+ ('SE', 'Sweden', 'SEK'),
+ ('SG', 'Singapore', 'SGD'),
+ ('SH', 'Saint Helena', 'SHP'),
+ ('SI', 'Slovenia', 'EUR'),
+ ('SJ', 'Svalbard and Jan Mayen', 'NOK'),
+ ('SK', 'Slovakia', 'EUR'),
+ ('SL', 'Sierra Leone', 'SLL'),
+ ('SM', 'San Marino', 'EUR'),
+ ('SN', 'Senegal', 'XOF'),
+ ('SO', 'Somalia', 'SOS'),
+ ('SR', 'Suriname', 'SRD'),
+ ('SS', 'South Sudan', 'SSP'),
+ ('ST', 'São Tomé and Príncipe', 'STD'),
+ ('SV', 'El Salvador', 'USD'),
+ ('SX', 'Sint Maarten', 'ANG'),
+ ('SY', 'Syria', 'SYP'),
+ ('SZ', 'Swaziland', 'SZL'),
+ ('TC', 'Turks and Caicos Islands', 'USD'),
+ ('TD', 'Chad', 'XAF'),
+ ('TF', 'French Southern Territories', 'EUR'),
+ ('TG', 'Togo', 'XOF'),
+ ('TH', 'Thailand', 'THB'),
+ ('TJ', 'Tajikistan', 'TJS'),
+ ('TK', 'Tokelau', 'NZD'),
+ ('TL', 'East Timor', 'USD'),
+ ('TM', 'Turkmenistan', 'TMT'),
+ ('TN', 'Tunisia', 'TND'),
+ ('TO', 'Tonga', 'TOP'),
+ ('TR', 'Turkey', 'TRY'),
+ ('TT', 'Trinidad and Tobago', 'TTD'),
+ ('TV', 'Tuvalu', 'AUD'),
+ ('TW', 'Taiwan', 'TWD'),
+ ('TZ', 'Tanzania', 'TZS'),
+ ('UA', 'Ukraine', 'UAH'),
+ ('UG', 'Uganda', 'UGX'),
+ ('UM', 'U.S. Minor Outlying Islands', 'USD'),
+ ('US', 'United States', 'USD'),
+ ('UY', 'Uruguay', 'UYU'),
+ ('UZ', 'Uzbekistan', 'UZS'),
+ ('VA', 'Vatican City', 'EUR'),
+ ('VC', 'Saint Vincent and the Grenadines', 'XCD'),
+ ('VE', 'Venezuela', 'VEF'),
+ ('VG', 'British Virgin Islands', 'USD'),
+ ('VI', 'U.S. Virgin Islands', 'USD'),
+ ('VN', 'Vietnam', 'VND'),
+ ('VU', 'Vanuatu', 'VUV'),
+ ('WF', 'Wallis and Futuna', 'XPF'),
+ ('WS', 'Samoa', 'WST'),
+ ('XK', 'Kosovo', 'EUR'),
+ ('YE', 'Yemen', 'YER'),
+ ('YT', 'Mayotte', 'EUR'),
+ ('ZA', 'South Africa', 'ZAR'),
+ ('ZM', 'Zambia', 'ZMW'),
+ ('ZW', 'Zimbabwe', 'ZWL');
+
+ */
+
+/**
+ *
+ select c.countryCode, c.countryName ,t.TestName, t.url, tr.loadtime, r.date
+ from countries c, test t, run r, testrun tr
+ where r.r_id=tr.r_id
+ and t.t_id= tr.t_id
+ and t.c_id=c.c_id
+ and r.date >= "2015-11-27";
+
+
+ *
+ select c.countryCode, c.countryName ,t.TestName, t.url, tr.loadtime
+ from countries c, test t, run r, testrun tr
+ where r.r_id=tr.r_id
+ and t.t_id= tr.t_id
+ and t.c_id=c.c_id
+ and r.date >= "2015-11-23";
+
+
+CREATE TABLE IF NOT EXISTS stats_users(
+    u_name  varchar(100),
+    u_email varchar(100),
+    u_pass  varchar(40)
+);
+
+insert into stats_users values ("Nikol Marku", "nikol.marku@ef.com","") ;
+insert into stats_users values ("Vahid Pourahmary", "Vahid.Pourahmary@EF.com","vahid") ;
+insert into stats_users values ("Rene Villegas", "rene.villegas@EF.com","villegas") ;
+select * from stats_users;
+
+
+
+CREATE TABLE IF NOT EXISTS test_group(
+    g_id int(2) NOT NULL AUTO_INCREMENT,
+    group_name varchar(50),
+    PRIMARY KEY (g_id)
+);
+
+ALTER TABLE url_monitoring.test
+ADD group_id int(2);
+
+ALTER TABLE url_monitoring.test
+ADD FOREIGN KEY (group_id)
+REFERENCES url_monitoring.test_group(g_id);
+
+insert into test_group (group_name) Values ("homepage");
+insert into test_group (group_name) Values ("lp_os");
+insert into test_group (group_name) Values ("lp_oe");
+insert into test_group (group_name) Values ("lp_ot");
+insert into test_group (group_name) Values ("lp_to");
+insert into test_group (group_name) Values ("lp_ee");
+insert into test_group (group_name) Values ("memberpage");
+insert into test_group (group_name) Values ("automation");
+
+//-----
+1	homepage
+2	lp_os
+3	lp_oe
+4	lp_ot
+5	lp_to
+6	lp_ee
+7	memberpage
+8	automation
+---
+memberpage
+UPDATE url_monitoring.test set group_id=1 WHERE url_monitoring.test.t_id IN(14,16,19,21,25,27,28,31,33,35,38,39,42,44,47,51,53,56,57 );
+UPDATE url_monitoring.test set group_id=2 WHERE t_id IN(17,23,29,36,40,45,48,49 );
+UPDATE url_monitoring.test set group_id=3 WHERE t_id IN(5,6,7,52);
+UPDATE url_monitoring.test set group_id=6 WHERE t_id IN(54,58);
+UPDATE url_monitoring.test set group_id=7 WHERE t_id IN(8,9,10,11,12,13,15,18,20,22,24,26,30,32,34,37,41,43,46,50,55);
+
+insert into test (group_id) Values (8) WHERE t_id IN();
+
+
+ **/
+ /**
+ DB sql file back up
+ use url_monitoring;
+ describe test;
+ CREATE TABLE t1 (t TIME(3), dt DATETIME);
+ describe t1;
+ drop table t1;
+
+ select * from testrun where loadtime > 50;
+ select * from run;
+
+ select r.r_ID, r.date, tr.t_ID, t.url, tr.loadtime
+ from testrun tr, test t, run r
+ WHERE t.url LIKE '%member%'
+ AND tr.loadtime > 10
+ AND tr.t_ID=t.t_ID
+ AND r.r_ID=tr.r_ID
+ ORDER BY tr.loadtime;
+
+ select r.r_ID, r.date, tr.t_ID, t.url, tr.loadtime
+ from testrun tr, test t, run r
+ WHERE t.url LIKE '%member%'
+ AND tr.loadtime > 8
+ AND tr.t_ID=t.t_ID
+ AND r.r_ID=tr.r_ID
+ ORDER BY r.date;
+
+ select * from test  WHERE url LIKE '%member%';
+
+ UPDATE test SET url = REPLACE(url, 'http', 'https') WHERE url LIKE '%member%' and t_ID != 8;
+
+ select * from testrun;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ use url_monitoring;
+
+ CREATE TABLE IF NOT EXISTS test_group(
+     g_id int(2) NOT NULL AUTO_INCREMENT,
+     group_name varchar(50),
+     PRIMARY KEY (g_id)
+ );
+ select * from test_group;
+ select * from test;
+
+ ALTER TABLE url_monitoring.test
+ ADD group_id int(2);
+
+ ALTER TABLE url_monitoring.test
+ ADD FOREIGN KEY (group_id)
+ REFERENCES url_monitoring.test_group(g_id);
+
+ insert into test_group (group_name) Values ("homepage");
+ insert into test_group (group_name) Values ("lp_os");
+ insert into test_group (group_name) Values ("lp_oe");
+ insert into test_group (group_name) Values ("lp_ot");
+ insert into test_group (group_name) Values ("lp_to");
+ insert into test_group (group_name) Values ("lp_ee");
+ insert into test_group (group_name) Values ("memberpage");
+ insert into test_group (group_name) Values ("automation");
+
+
+
+ UPDATE url_monitoring.test set group_id=1 WHERE url_monitoring.test.t_id IN(14,16,19,21,25,27,28,31,33,35,38,39,42,44,47,51,53,56,57 );
+ UPDATE url_monitoring.test set group_id=2 WHERE t_id IN(17,23,29,36,40,45,48,49 );
+ UPDATE url_monitoring.test set group_id=3 WHERE t_id IN(5,6,7,52);
+ UPDATE url_monitoring.test set group_id=6 WHERE t_id IN(54,58);
+ UPDATE url_monitoring.test set group_id=7 WHERE t_id IN(8,9,10,11,12,13,15,18,20,22,24,26,30,32,34,37,41,43,46,50,55);
+
+
+ CREATE TABLE  stats_users(
+     u_name  varchar(100),
+     u_email varchar(100),
+     u_pass  varchar(40)
+ );
+
+ insert into stats_users values ("Nikol Marku", "nikol.marku@ef.com","k....e") ;
+ insert into stats_users values ("Vahid Pourahmary", "Vahid.Pourahmary@EF.com","vahid") ;
+ insert into stats_users values ("Rene Villegas", "rene.villegas@EF.com","villegas") ;
+ select * from stats_users;
+
+ select * from stats_users;
+
+ FLUSH PRIVILEGES;
+
+ select * from test;
+
+ /*
+ use mysql
+ GRANT ALL ON *.* to java@'10.24.208.81' IDENTIFIED BY 'password';
+ FLUSH PRIVILEGES;*/
+
+ /*select WEEKDAY(now()); = 0*/
+ /*select curdate(); = 2015-12-14*/
+
+ /*SELECT CURDATE()-INTERVAL (WEEKDAY(NOW())+8) DAY   =2015-12-06*/
+
+ /*SELECT CURDATE()-INTERVAL WEEKDAY(NOW()) DAY;  = 2015-12-14*/
+
+
+ /* SELECT r.date, r.r_id, t.t_id, c.countryCode, c.countryName ,t.TestName, t.url, ROUND(AVG(tr.loadtime), 3) AS loadtime
+  from countries c, test t, run r, testrun tr
+  where t.t_id IN (37, 41,50,38,44,51)
+  AND r.r_id=tr.r_id
+  AND t.t_id= tr.t_id
+  AND t.c_id=c.c_id
+  group by t.t_id
+  order by t.t_id;*/
+
+  SELECT t.t_id, c.countryCode, c.countryName , t.url, ROUND(AVG(tr.loadtime), 3 ) AS loadtime
+  from countries c, test t, run r, testrun tr where r.date > (SELECT CURDATE()-INTERVAL (WEEKDAY(NOW())+8) DAY)
+  AND r.date < (SELECT CURDATE()-INTERVAL WEEKDAY(NOW()) DAY) AND r.r_id=tr.r_id AND t.t_id= tr.t_id AND t.c_id=c.c_id
+  group by t.t_id order by t.t_id;
+
+
+
+ **
+ // TC agent sql is on C:\Program Files\MySQL\MySQL Server 5.7\bin
+  CREATE DATABASE url_monitoring;
+  CREATE USER 'java'@'localhost' IDENTIFIED BY 'password';
+  GRANT ALL ON url_monitoring.* TO 'java'@'localhost' IDENTIFIED BY 'password';
+  Yes, java is the username and password is the password here.
+
+  mysql --user=java --password url_monitoring
+  mysql> show tables;
+  +--------------------------+
+  | Tables_in_url_monitoring |
+  +--------------------------+
+  | countries                |
+  | run                      |
+  | test                     |
+  | testrun                  |
+  +--------------------------+
+  4 rows in set (0.00 sec)
+
+  mysql>
+
+  CREATE TABLE IF NOT EXISTS Test (
+  t_ID int NOT NULL AUTO_INCREMENT,
+  TestName varchar(55) NOT NULL,
+  url varchar(255),
+  note varchar(255),
+  c_id int(5),
+  PRIMARY KEY (t_ID),
+  FOREIGN KEY (c_id) REFERENCES countries(c_id)
+  );
+
+  CREATE TABLE IF NOT EXISTS Run (
+  r_ID int NOT NULL AUTO_INCREMENT,
+  date DATETIME , //2015-11-11  NO hour ...!
+  note varchar(255),
+  PRIMARY KEY (r_ID)
+  );
+
+
+ //(3,3)
+  CREATE TABLE IF NOT EXISTS TestRun (
+  r_ID int,
+  t_ID int,
+  loadtime FLOAT,
+  PRIMARY KEY (r_ID, t_ID),
+  FOREIGN KEY (r_ID) REFERENCES Run (r_ID),
+  FOREIGN KEY (t_ID) REFERENCES Test(t_ID)
+  );
+
+  CREATE VIEW TEST_STATS AS
+  SELECT r.date, r.r_id, t.t_id, c.countryCode, c.countryName ,t.TestName, t.url, tr.loadtime
+  from countries c, test t, run r, testrun tr
+  where r.r_id=tr.r_id
+  and t.t_id= tr.t_id
+  and t.c_id=c.c_id
+  ORDER BY R.R_ID;
+
+
+  // inserts   /6 AL   YYYY-MM-DD HH:MI:SS "2015-10-25 13:10:25"
+  INSERT INTO Test (TestName, url, c_id) VALUES("UK_HomePage", "http://www.englishtown.com/en-gb/", 6);
+
+  INSERT INTO Run (date) VALUES(NOW());
+
+  //TEST
+  INSERT INTO TestRun (r_ID, t_ID, loadtime) VALUES(1, 1, 6);
+  INSERT INTO TestRun (r_ID, t_ID, loadtime) VALUES(1, 2, 16);
+
+  Select * from Test, Run, TestRun Where TestRun.r_ID=Run.r_id AND TestRun.t_ID=Test.t_id;
+  mysql> Select * from Test, Run, TestRun Where TestRun.r_ID=Run.r_id AND TestRun.t_ID=Test.t_id;
+  +------+--------------+-----------------------------------+------+------+------+---------------------+------+------+------+----------+
+  | t_ID | TestName     | url                               | note | c_id | r_ID | date                | note | r_ID | t_ID | loadtime |
+  +------+--------------+-----------------------------------+------+------+------+---------------------+------+------+------+----------+
+  |    1 | UK_HomePage  | http://www.englishtown.com/en-gb/ | NULL |    6 |    1 | 2015-10-30 16:02:03 | NULL |    1 |    1 |        6 |
+  |    2 | UK_HomePage2 | http://www.englishtown.com/en-gb/ | NULL |    7 |    1 | 2015-10-30 16:02:03 | NULL |    1 |    2 |       16 |
+  +------+--------------+-----------------------------------+------+------+------+---------------------+------+------+------+----------+
+
+  Select Test.TestName, Test.url,Run.r_ID, Run.date, TestRun.loadtime from Test, Run, TestRun
+  Where TestRun.r_ID=Run.r_id AND TestRun.t_ID=Test.t_id;
+  +--------------+-----------------------------------+------+---------------------+----------+
+  | TestName     | url                               | r_ID | date                | loadtime |
+  +--------------+-----------------------------------+------+---------------------+----------+
+  | UK_HomePage  | http://www.englishtown.com/en-gb/ |    1 | 2015-10-30 16:02:03 |        6 |
+  | UK_HomePage2 | http://www.englishtown.com/en-gb/ |    1 | 2015-10-30 16:02:03 |       16 |
+  +--------------+-----------------------------------+------+---------------------+----------+
+
+
+  select r.r_id, t.t_id, t.url, c.countryCode, c.countryName , tr.loadtime
+  from countries c, test t, run r, testrun tr
+  where r.r_id=tr.r_id
+  and t.t_id= tr.t_id
+  and t.c_id=c.c_id;
+  +------+------+-----------------------------------+-------------+-------------+----------+
+  | r_id | t_id | url                               | countryCode | countryName | loadtime |
+  +------+------+-----------------------------------+-------------+-------------+----------+
+  |    5 |    2 | http://www.englishtown.com/en-gb/ | AM          | Armenia     |     9.90 |
+  +------+------+-----------------------------------+-------------+-------------+----------+
+  1 row in set (0.00 sec)
+
+  select c.countryCode, c.countryName ,t.TestName, t.url, tr.loadtime
+  from countries c, test t, run r, testrun tr
+  where r.r_id=tr.r_id
+  and t.t_id= tr.t_id
+  and t.c_id=c.c_id;
+  +-------------+-------------+-----------------------------------+----------+
+  | countryCode | countryName | url                               | loadtime |
+  +-------------+-------------+-----------------------------------+----------+
+  | AM          | Armenia     | http://www.englishtown.com/en-gb/ |     9.90 |
+  +-------------+-------------+-----------------------------------+----------+
+  CREATE VIEW TEST_STATS AS
+  SELECT r.date, r.r_id, t.t_id, c.countryCode, c.countryName ,t.TestName, t.url, tr.loadtime
+   from countries c, test t, run r, testrun tr
+   where r.r_id=tr.r_id
+   and t.t_id= tr.t_id
+   and t.c_id=c.c_id
+   ORDER BY R.R_ID;
+
+  +---------------------+------+------+-------------+----------------+--------------+-----------------------------------+----------+
+  | date                | r_id | t_id | countryCode | countryName    | TestName     | url                               | loadtime |
+  +---------------------+------+------+-------------+----------------+--------------+-----------------------------------+----------+
+  | 2015-11-11 00:00:00 |    8 |    2 | AM          | Armenia        | UK_HomePage2 | http://www.englishtown.com/en-gb/ |   10.657 |
+
+  mysql>
+
+  mysql>
+ // test data
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/ar-wws/lp/ee/10001/?ctr=om", ((Select c_id from countries WHERE countryCode="om" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/en-wws/lp/oe/automation-test-01-general-english-v1111/?ctr=fi",  (Select c_id from countries WHERE countryCode="fi" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/fr-wws/lp/oe/automation-test-01-lp-private-teacher/?ctr=pf",  (Select c_id from countries WHERE countryCode="pf" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://englishlive.ef.com/en-wws/lp/oe/automation-test-01-general-english-v1111/?ctr=lc",  (Select c_id from countries WHERE countryCode="lc" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/ar-wws/buy/default/member/?ctr=sa&offerid=9502",  (Select c_id from countries WHERE countryCode="sa" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/fr-wws/buy/default/member/?ctr=be&offerid=2006",  (Select c_id from countries WHERE countryCode="be" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/de-wws/buy/default/member/?ctr=at&offerid=2006",  (Select c_id from countries WHERE countryCode="at" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/en-wws/buy/default/member/?ctr=in&offerid=2006",  (Select c_id from countries WHERE countryCode="in" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/es-us/buy/default/member/",  (Select c_id from countries WHERE countryCode="us" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/en-us/buy/default/member/",  (Select c_id from countries WHERE countryCode="us" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/en-us/",  (Select c_id from countries WHERE countryCode="us" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/zh-tw/buy/default/member/",  (Select c_id from countries WHERE countryCode="tw" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/zh-tw/",  (Select c_id from countries WHERE countryCode="tw" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/tr-tr/lp/os/general-english-v1/",  (Select c_id from countries WHERE countryCode="tr" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/tr-tr/buy/default/member/",  (Select c_id from countries WHERE countryCode="tr" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/tr-tr/",  (Select c_id from countries WHERE countryCode="tr" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/th-th/buy/default/member/",  (Select c_id from countries WHERE countryCode="th" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/th-th/",  (Select c_id from countries WHERE countryCode="th" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/en-se/buy/default/member/",  (Select c_id from countries WHERE countryCode="se" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/ar-sa/lp/os/toefl-0111/",  (Select c_id from countries WHERE countryCode="sa" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/ar-sa/buy/default/member/",  (Select c_id from countries WHERE countryCode="sa" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/ar-sa/",  (Select c_id from countries WHERE countryCode="sa" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/ru-ru/buy/default/member/",  (Select c_id from countries WHERE countryCode="ru" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.ru/",  (Select c_id from countries WHERE countryCode="ru" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/es-pe/",  (Select c_id from countries WHERE countryCode="pe" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/es-mx/lp/os/lplearnenglishonline/",  (Select c_id from countries WHERE countryCode="mx" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/es-mx/buy/default/member/",  (Select c_id from countries WHERE countryCode="mx" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/es-mx/",  (Select c_id from countries WHERE countryCode="mx" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/ko-kr/buy/default/member/",  (Select c_id from countries WHERE countryCode="kr" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/ko-kr/",  (Select c_id from countries WHERE countryCode="kr" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.co.jp/buy/default/member/",  (Select c_id from countries WHERE countryCode="jp" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.co.jp/",  (Select c_id from countries WHERE countryCode="jp" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.it/it-it/lp/os/business-1/",  (Select c_id from countries WHERE countryCode="it" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.it/buy/default/member/",  (Select c_id from countries WHERE countryCode="it" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.it/",  (Select c_id from countries WHERE countryCode="it" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/id-id/",  (Select c_id from countries WHERE countryCode="id" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/en-gb/lp/os/automation-test-learn-english-online-02/",  (Select c_id from countries WHERE countryCode="gb" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/en-gb/buy/default/member/",  (Select c_id from countries WHERE countryCode="gb" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/en-gb/",  (Select c_id from countries WHERE countryCode="gb" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.fr/buy/default/member/",  (Select c_id from countries WHERE countryCode="fr" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.fr/",  (Select c_id from countries WHERE countryCode="fr" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.es/lp/os/learn-english-online-01/",  (Select c_id from countries WHERE countryCode="es" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.es/buy/default/member/",  (Select c_id from countries WHERE countryCode="es" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.es/",  (Select c_id from countries WHERE countryCode="es" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/de-de/lp/os/automation-test-01-stwt/",  (Select c_id from countries WHERE countryCode="de" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.de/lp/os/01-stwt1/",  (Select c_id from countries WHERE countryCode="de" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.de/buy/default/member/",  (Select c_id from countries WHERE countryCode="de" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.de/",  (Select c_id from countries WHERE countryCode="de" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://englishlive.ef.com/es-co/lp/oe/promo-upgrade-g/",  (Select c_id from countries WHERE countryCode="co" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://englishlive.ef.com/es-co/",  (Select c_id from countries WHERE countryCode="co" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com.br/lp/ee/ee_abr14/",  (Select c_id from countries WHERE countryCode="br" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com.br/buy/default/member/",  (Select c_id from countries WHERE countryCode="br" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com.br/",  (Select c_id from countries WHERE countryCode="br" ) ) ;
+  INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/es-ar", (Select c_id from countries WHERE countryCode="ar") ) ;
+
+
+  //http://peric.github.io/GetCountries/
+  CREATE TABLE IF NOT EXISTS countries (
+  c_id int(5) NOT NULL AUTO_INCREMENT,
+  countryCode char(2) NOT NULL DEFAULT '',
+  countryName varchar(45) NOT NULL DEFAULT '',
+  currencyCode char(3) DEFAULT NULL,
+  PRIMARY KEY (c_id)
+  );
+  //ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=0;
+
+  INSERT INTO countries (countryCode, countryName, currencyCode) VALUES
+  ('AD', 'Andorra', 'EUR'),
+  ('AE', 'United Arab Emirates', 'AED'),
+  ('AF', 'Afghanistan', 'AFN'),
+  ('AG', 'Antigua and Barbuda', 'XCD'),
+  ('AI', 'Anguilla', 'XCD'),
+  ('AL', 'Albania', 'ALL'),
+  ('AM', 'Armenia', 'AMD'),
+  ('AO', 'Angola', 'AOA'),
+  ('AQ', 'Antarctica', ''),
+  ('AR', 'Argentina', 'ARS'),
+  ('AS', 'American Samoa', 'USD'),
+  ('AT', 'Austria', 'EUR'),
+  ('AU', 'Australia', 'AUD'),
+  ('AW', 'Aruba', 'AWG'),
+  ('AX', 'Åland', 'EUR'),
+  ('AZ', 'Azerbaijan', 'AZN'),
+  ('BA', 'Bosnia and Herzegovina', 'BAM'),
+  ('BB', 'Barbados', 'BBD'),
+  ('BD', 'Bangladesh', 'BDT'),
+  ('BE', 'Belgium', 'EUR'),
+  ('BF', 'Burkina Faso', 'XOF'),
+  ('BG', 'Bulgaria', 'BGN'),
+  ('BH', 'Bahrain', 'BHD'),
+  ('BI', 'Burundi', 'BIF'),
+  ('BJ', 'Benin', 'XOF'),
+  ('BL', 'Saint Barthélemy', 'EUR'),
+  ('BM', 'Bermuda', 'BMD'),
+  ('BN', 'Brunei', 'BND'),
+  ('BO', 'Bolivia', 'BOB'),
+  ('BQ', 'Bonaire', 'USD'),
+  ('BR', 'Brazil', 'BRL'),
+  ('BS', 'Bahamas', 'BSD'),
+  ('BT', 'Bhutan', 'BTN'),
+  ('BV', 'Bouvet Island', 'NOK'),
+  ('BW', 'Botswana', 'BWP'),
+  ('BY', 'Belarus', 'BYR'),
+  ('BZ', 'Belize', 'BZD'),
+  ('CA', 'Canada', 'CAD'),
+  ('CC', 'Cocos [Keeling] Islands', 'AUD'),
+  ('CD', 'Democratic Republic of the Congo', 'CDF'),
+  ('CF', 'Central African Republic', 'XAF'),
+  ('CG', 'Republic of the Congo', 'XAF'),
+  ('CH', 'Switzerland', 'CHF'),
+  ('CI', 'Ivory Coast', 'XOF'),
+  ('CK', 'Cook Islands', 'NZD'),
+  ('CL', 'Chile', 'CLP'),
+  ('CM', 'Cameroon', 'XAF'),
+  ('CN', 'China', 'CNY'),
+  ('CO', 'Colombia', 'COP'),
+  ('CR', 'Costa Rica', 'CRC'),
+  ('CU', 'Cuba', 'CUP'),
+  ('CV', 'Cape Verde', 'CVE'),
+  ('CW', 'Curacao', 'ANG'),
+  ('CX', 'Christmas Island', 'AUD'),
+  ('CY', 'Cyprus', 'EUR'),
+  ('CZ', 'Czech Republic', 'CZK'),
+  ('DE', 'Germany', 'EUR'),
+  ('DJ', 'Djibouti', 'DJF'),
+  ('DK', 'Denmark', 'DKK'),
+  ('DM', 'Dominica', 'XCD'),
+  ('DO', 'Dominican Republic', 'DOP'),
+  ('DZ', 'Algeria', 'DZD'),
+  ('EC', 'Ecuador', 'USD'),
+  ('EE', 'Estonia', 'EUR'),
+  ('EG', 'Egypt', 'EGP'),
+  ('EH', 'Western Sahara', 'MAD'),
+  ('ER', 'Eritrea', 'ERN'),
+  ('ES', 'Spain', 'EUR'),
+  ('ET', 'Ethiopia', 'ETB'),
+  ('FI', 'Finland', 'EUR'),
+  ('FJ', 'Fiji', 'FJD'),
+  ('FK', 'Falkland Islands', 'FKP'),
+  ('FM', 'Micronesia', 'USD'),
+  ('FO', 'Faroe Islands', 'DKK'),
+  ('FR', 'France', 'EUR'),
+  ('GA', 'Gabon', 'XAF'),
+  ('GB', 'United Kingdom', 'GBP'),
+  ('GD', 'Grenada', 'XCD'),
+  ('GE', 'Georgia', 'GEL'),
+  ('GF', 'French Guiana', 'EUR'),
+  ('GG', 'Guernsey', 'GBP'),
+  ('GH', 'Ghana', 'GHS'),
+  ('GI', 'Gibraltar', 'GIP'),
+  ('GL', 'Greenland', 'DKK'),
+  ('GM', 'Gambia', 'GMD'),
+  ('GN', 'Guinea', 'GNF'),
+  ('GP', 'Guadeloupe', 'EUR'),
+  ('GQ', 'Equatorial Guinea', 'XAF'),
+  ('GR', 'Greece', 'EUR'),
+  ('GS', 'South Georgia and the South Sandwich Islands', 'GBP'),
+  ('GT', 'Guatemala', 'GTQ'),
+  ('GU', 'Guam', 'USD'),
+  ('GW', 'Guinea-Bissau', 'XOF'),
+  ('GY', 'Guyana', 'GYD'),
+  ('HK', 'Hong Kong', 'HKD'),
+  ('HM', 'Heard Island and McDonald Islands', 'AUD'),
+  ('HN', 'Honduras', 'HNL'),
+  ('HR', 'Croatia', 'HRK'),
+  ('HT', 'Haiti', 'HTG'),
+  ('HU', 'Hungary', 'HUF'),
+  ('ID', 'Indonesia', 'IDR'),
+  ('IE', 'Ireland', 'EUR'),
+  ('IL', 'Israel', 'ILS'),
+  ('IM', 'Isle of Man', 'GBP'),
+  ('IN', 'India', 'INR'),
+  ('IO', 'British Indian Ocean Territory', 'USD'),
+  ('IQ', 'Iraq', 'IQD'),
+  ('IR', 'Iran', 'IRR'),
+  ('IS', 'Iceland', 'ISK'),
+  ('IT', 'Italy', 'EUR'),
+  ('JE', 'Jersey', 'GBP'),
+  ('JM', 'Jamaica', 'JMD'),
+  ('JO', 'Jordan', 'JOD'),
+  ('JP', 'Japan', 'JPY'),
+  ('KE', 'Kenya', 'KES'),
+  ('KG', 'Kyrgyzstan', 'KGS'),
+  ('KH', 'Cambodia', 'KHR'),
+  ('KI', 'Kiribati', 'AUD'),
+  ('KM', 'Comoros', 'KMF'),
+  ('KN', 'Saint Kitts and Nevis', 'XCD'),
+  ('KP', 'North Korea', 'KPW'),
+  ('KR', 'South Korea', 'KRW'),
+  ('KW', 'Kuwait', 'KWD'),
+  ('KY', 'Cayman Islands', 'KYD'),
+  ('KZ', 'Kazakhstan', 'KZT'),
+  ('LA', 'Laos', 'LAK'),
+  ('LB', 'Lebanon', 'LBP'),
+  ('LC', 'Saint Lucia', 'XCD'),
+  ('LI', 'Liechtenstein', 'CHF'),
+  ('LK', 'Sri Lanka', 'LKR'),
+  ('LR', 'Liberia', 'LRD'),
+  ('LS', 'Lesotho', 'LSL'),
+  ('LT', 'Lithuania', 'EUR'),
+  ('LU', 'Luxembourg', 'EUR'),
+  ('LV', 'Latvia', 'EUR'),
+  ('LY', 'Libya', 'LYD'),
+  ('MA', 'Morocco', 'MAD'),
+  ('MC', 'Monaco', 'EUR'),
+  ('MD', 'Moldova', 'MDL'),
+  ('ME', 'Montenegro', 'EUR'),
+  ('MF', 'Saint Martin', 'EUR'),
+  ('MG', 'Madagascar', 'MGA'),
+  ('MH', 'Marshall Islands', 'USD'),
+  ('MK', 'Macedonia', 'MKD'),
+  ('ML', 'Mali', 'XOF'),
+  ('MM', 'Myanmar [Burma]', 'MMK'),
+  ('MN', 'Mongolia', 'MNT'),
+  ('MO', 'Macao', 'MOP'),
+  ('MP', 'Northern Mariana Islands', 'USD'),
+  ('MQ', 'Martinique', 'EUR'),
+  ('MR', 'Mauritania', 'MRO'),
+  ('MS', 'Montserrat', 'XCD'),
+  ('MT', 'Malta', 'EUR'),
+  ('MU', 'Mauritius', 'MUR'),
+  ('MV', 'Maldives', 'MVR'),
+  ('MW', 'Malawi', 'MWK'),
+  ('MX', 'Mexico', 'MXN'),
+  ('MY', 'Malaysia', 'MYR'),
+  ('MZ', 'Mozambique', 'MZN'),
+  ('NA', 'Namibia', 'NAD'),
+  ('NC', 'New Caledonia', 'XPF'),
+  ('NE', 'Niger', 'XOF'),
+  ('NF', 'Norfolk Island', 'AUD'),
+  ('NG', 'Nigeria', 'NGN'),
+  ('NI', 'Nicaragua', 'NIO'),
+  ('NL', 'Netherlands', 'EUR'),
+  ('NO', 'Norway', 'NOK'),
+  ('NP', 'Nepal', 'NPR'),
+  ('NR', 'Nauru', 'AUD'),
+  ('NU', 'Niue', 'NZD'),
+  ('NZ', 'New Zealand', 'NZD'),
+  ('OM', 'Oman', 'OMR'),
+  ('PA', 'Panama', 'PAB'),
+  ('PE', 'Peru', 'PEN'),
+  ('PF', 'French Polynesia', 'XPF'),
+  ('PG', 'Papua New Guinea', 'PGK'),
+  ('PH', 'Philippines', 'PHP'),
+  ('PK', 'Pakistan', 'PKR'),
+  ('PL', 'Poland', 'PLN'),
+  ('PM', 'Saint Pierre and Miquelon', 'EUR'),
+  ('PN', 'Pitcairn Islands', 'NZD'),
+  ('PR', 'Puerto Rico', 'USD'),
+  ('PS', 'Palestine', 'ILS'),
+  ('PT', 'Portugal', 'EUR'),
+  ('PW', 'Palau', 'USD'),
+  ('PY', 'Paraguay', 'PYG'),
+  ('QA', 'Qatar', 'QAR'),
+  ('RE', 'Réunion', 'EUR'),
+  ('RO', 'Romania', 'RON'),
+  ('RS', 'Serbia', 'RSD'),
+  ('RU', 'Russia', 'RUB'),
+  ('RW', 'Rwanda', 'RWF'),
+  ('SA', 'Saudi Arabia', 'SAR'),
+  ('SB', 'Solomon Islands', 'SBD'),
+  ('SC', 'Seychelles', 'SCR'),
+  ('SD', 'Sudan', 'SDG'),
+  ('SE', 'Sweden', 'SEK'),
+  ('SG', 'Singapore', 'SGD'),
+  ('SH', 'Saint Helena', 'SHP'),
+  ('SI', 'Slovenia', 'EUR'),
+  ('SJ', 'Svalbard and Jan Mayen', 'NOK'),
+  ('SK', 'Slovakia', 'EUR'),
+  ('SL', 'Sierra Leone', 'SLL'),
+  ('SM', 'San Marino', 'EUR'),
+  ('SN', 'Senegal', 'XOF'),
+  ('SO', 'Somalia', 'SOS'),
+  ('SR', 'Suriname', 'SRD'),
+  ('SS', 'South Sudan', 'SSP'),
+  ('ST', 'São Tomé and Príncipe', 'STD'),
+  ('SV', 'El Salvador', 'USD'),
+  ('SX', 'Sint Maarten', 'ANG'),
+  ('SY', 'Syria', 'SYP'),
+  ('SZ', 'Swaziland', 'SZL'),
+  ('TC', 'Turks and Caicos Islands', 'USD'),
+  ('TD', 'Chad', 'XAF'),
+  ('TF', 'French Southern Territories', 'EUR'),
+  ('TG', 'Togo', 'XOF'),
+  ('TH', 'Thailand', 'THB'),
+  ('TJ', 'Tajikistan', 'TJS'),
+  ('TK', 'Tokelau', 'NZD'),
+  ('TL', 'East Timor', 'USD'),
+  ('TM', 'Turkmenistan', 'TMT'),
+  ('TN', 'Tunisia', 'TND'),
+  ('TO', 'Tonga', 'TOP'),
+  ('TR', 'Turkey', 'TRY'),
+  ('TT', 'Trinidad and Tobago', 'TTD'),
+  ('TV', 'Tuvalu', 'AUD'),
+  ('TW', 'Taiwan', 'TWD'),
+  ('TZ', 'Tanzania', 'TZS'),
+  ('UA', 'Ukraine', 'UAH'),
+  ('UG', 'Uganda', 'UGX'),
+  ('UM', 'U.S. Minor Outlying Islands', 'USD'),
+  ('US', 'United States', 'USD'),
+  ('UY', 'Uruguay', 'UYU'),
+  ('UZ', 'Uzbekistan', 'UZS'),
+  ('VA', 'Vatican City', 'EUR'),
+  ('VC', 'Saint Vincent and the Grenadines', 'XCD'),
+  ('VE', 'Venezuela', 'VEF'),
+  ('VG', 'British Virgin Islands', 'USD'),
+  ('VI', 'U.S. Virgin Islands', 'USD'),
+  ('VN', 'Vietnam', 'VND'),
+  ('VU', 'Vanuatu', 'VUV'),
+  ('WF', 'Wallis and Futuna', 'XPF'),
+  ('WS', 'Samoa', 'WST'),
+  ('XK', 'Kosovo', 'EUR'),
+  ('YE', 'Yemen', 'YER'),
+  ('YT', 'Mayotte', 'EUR'),
+  ('ZA', 'South Africa', 'ZAR'),
+  ('ZM', 'Zambia', 'ZMW'),
+  ('ZW', 'Zimbabwe', 'ZWL');
+
+  */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/en-wws/lp/oe/automation-test-01-general-english-v1111/?ctr=fi",  (Select c_id from countries WHERE countryCode="fi" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/fr-wws/lp/oe/automation-test-01-lp-private-teacher/?ctr=pf",  (Select c_id from countries WHERE countryCode="pf" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://englishlive.ef.com/en-wws/lp/oe/automation-test-01-general-english-v1111/?ctr=lc",  (Select c_id from countries WHERE countryCode="lc" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/ar-wws/buy/default/member/?ctr=sa&offerid=9502",  (Select c_id from countries WHERE countryCode="sa" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/fr-wws/buy/default/member/?ctr=be&offerid=2006",  (Select c_id from countries WHERE countryCode="be" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/de-wws/buy/default/member/?ctr=at&offerid=2006",  (Select c_id from countries WHERE countryCode="at" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/en-wws/buy/default/member/?ctr=in&offerid=2006",  (Select c_id from countries WHERE countryCode="in" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/es-us/buy/default/member/",  (Select c_id from countries WHERE countryCode="us" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/en-us/buy/default/member/",  (Select c_id from countries WHERE countryCode="us" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/en-us/",  (Select c_id from countries WHERE countryCode="us" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/zh-tw/buy/default/member/",  (Select c_id from countries WHERE countryCode="tw" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/zh-tw/",  (Select c_id from countries WHERE countryCode="tw" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/tr-tr/lp/os/general-english-v1/",  (Select c_id from countries WHERE countryCode="tr" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/tr-tr/buy/default/member/",  (Select c_id from countries WHERE countryCode="tr" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/tr-tr/",  (Select c_id from countries WHERE countryCode="tr" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/th-th/buy/default/member/",  (Select c_id from countries WHERE countryCode="th" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/th-th/",  (Select c_id from countries WHERE countryCode="th" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/en-se/buy/default/member/",  (Select c_id from countries WHERE countryCode="se" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/ar-sa/lp/os/toefl-0111/",  (Select c_id from countries WHERE countryCode="sa" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/ar-sa/buy/default/member/",  (Select c_id from countries WHERE countryCode="sa" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/ar-sa/",  (Select c_id from countries WHERE countryCode="sa" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/ru-ru/buy/default/member/",  (Select c_id from countries WHERE countryCode="ru" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.ru/",  (Select c_id from countries WHERE countryCode="ru" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/es-pe/",  (Select c_id from countries WHERE countryCode="pe" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/es-mx/lp/os/lplearnenglishonline/",  (Select c_id from countries WHERE countryCode="mx" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/es-mx/buy/default/member/",  (Select c_id from countries WHERE countryCode="mx" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/es-mx/",  (Select c_id from countries WHERE countryCode="mx" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/ko-kr/buy/default/member/",  (Select c_id from countries WHERE countryCode="kr" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/ko-kr/",  (Select c_id from countries WHERE countryCode="kr" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.co.jp/buy/default/member/",  (Select c_id from countries WHERE countryCode="jp" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.co.jp/",  (Select c_id from countries WHERE countryCode="jp" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.it/it-it/lp/os/business-1/",  (Select c_id from countries WHERE countryCode="it" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.it/buy/default/member/",  (Select c_id from countries WHERE countryCode="it" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.it/",  (Select c_id from countries WHERE countryCode="it" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/id-id/",  (Select c_id from countries WHERE countryCode="id" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/en-gb/lp/os/automation-test-learn-english-online-02/",  (Select c_id from countries WHERE countryCode="gb" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/en-gb/buy/default/member/",  (Select c_id from countries WHERE countryCode="gb" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/en-gb/",  (Select c_id from countries WHERE countryCode="gb" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.fr/buy/default/member/",  (Select c_id from countries WHERE countryCode="fr" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.fr/",  (Select c_id from countries WHERE countryCode="fr" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.es/lp/os/learn-english-online-01/",  (Select c_id from countries WHERE countryCode="es" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.es/buy/default/member/",  (Select c_id from countries WHERE countryCode="es" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.es/",  (Select c_id from countries WHERE countryCode="es" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/de-de/lp/os/automation-test-01-stwt/",  (Select c_id from countries WHERE countryCode="de" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.de/lp/os/01-stwt1/",  (Select c_id from countries WHERE countryCode="de" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.de/buy/default/member/",  (Select c_id from countries WHERE countryCode="de" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.de/",  (Select c_id from countries WHERE countryCode="de" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://englishlive.ef.com/es-co/lp/oe/promo-upgrade-g/",  (Select c_id from countries WHERE countryCode="co" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://englishlive.ef.com/es-co/",  (Select c_id from countries WHERE countryCode="co" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com.br/lp/ee/ee_abr14/",  (Select c_id from countries WHERE countryCode="br" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com.br/buy/default/member/",  (Select c_id from countries WHERE countryCode="br" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com.br/",  (Select c_id from countries WHERE countryCode="br" ) ) ;
+ INSERT INTO Test (TestName, url, c_id) VALUES("", "http://www.englishtown.com/es-ar", (Select c_id from countries WHERE countryCode="ar") ) ;
+
+
+
+
+ mysql> select * from test,  countries where test.c_id=countries.c_id;
+ +------+----------+------------------------------------------------------------------------------------------+------+------+------+-------------+------------------+--------------+
+ | t_ID | TestName | url                                                                                      | note | c_id | c_id | countryCode | countryName      | currencyCode |
+ +------+----------+------------------------------------------------------------------------------------------+------+------+------+-------------+------------------+--------------+
+ |    5 |          | http://www.englishtown.com/en-wws/lp/oe/automation-test-01-general-english-v1111/?ctr=fi | NULL |   70 |   70 | FI          | Finland          | EUR          |
+ |    6 |          | http://www.englishtown.com/fr-wws/lp/oe/automation-test-01-lp-private-teacher/?ctr=pf    | NULL |  175 |  175 | PF          | French Polynesia | XPF          |
+ |    7 |          | http://englishlive.ef.com/en-wws/lp/oe/automation-test-01-general-english-v1111/?ctr=lc  | NULL |  128 |  128 | LC          | Saint Lucia      | XCD          |
+ |    8 |          | http://www.englishtown.com/ar-wws/buy/default/member/?ctr=sa&offerid=9502                | NULL |  193 |  193 | SA          | Saudi Arabia     | SAR          |
+ |    9 |          | http://www.englishtown.com/fr-wws/buy/default/member/?ctr=be&offerid=2006                | NULL |   20 |   20 | BE          | Belgium          | EUR          |
+ |   10 |          | http://www.englishtown.com/de-wws/buy/default/member/?ctr=at&offerid=2006                | NULL |   12 |   12 | AT          | Austria          | EUR          |
+ |   11 |          | http://www.englishtown.com/en-wws/buy/default/member/?ctr=in&offerid=2006                | NULL |  105 |  105 | IN          | India            | INR          |
+ |   12 |          | http://www.englishtown.com/es-us/buy/default/member/                                     | NULL |  233 |  233 | US          | United States    | USD          |
+ |   13 |          | http://www.englishtown.com/en-us/buy/default/member/                                     | NULL |  233 |  233 | US          | United States    | USD          |
+ |   14 |          | http://www.englishtown.com/en-us/                                                        | NULL |  233 |  233 | US          | United States    | USD          |
+ |   15 |          | http://www.englishtown.com/zh-tw/buy/default/member/                                     | NULL |  228 |  228 | TW          | Taiwan           | TWD          |
+ |   16 |          | http://www.englishtown.com/zh-tw/                                                        | NULL |  228 |  228 | TW          | Taiwan           | TWD          |
+ |   17 |          | http://www.englishtown.com/tr-tr/lp/os/general-english-v1/                               | NULL |  225 |  225 | TR          | Turkey           | TRY          |
+ |   18 |          | http://www.englishtown.com/tr-tr/buy/default/member/                                     | NULL |  225 |  225 | TR          | Turkey           | TRY          |
+ |   19 |          | http://www.englishtown.com/tr-tr/                                                        | NULL |  225 |  225 | TR          | Turkey           | TRY          |
+ |   20 |          | http://www.englishtown.com/th-th/buy/default/member/                                     | NULL |  218 |  218 | TH          | Thailand         | THB          |
+ |   21 |          | http://www.englishtown.com/th-th/                                                        | NULL |  218 |  218 | TH          | Thailand         | THB          |
+ |   22 |          | http://www.englishtown.com/en-se/buy/default/member/                                     | NULL |  197 |  197 | SE          | Sweden           | SEK          |
+ |   23 |          | http://www.englishtown.com/ar-sa/lp/os/toefl-0111/                                       | NULL |  193 |  193 | SA          | Saudi Arabia     | SAR          |
+ |   24 |          | http://www.englishtown.com/ar-sa/buy/default/member/                                     | NULL |  193 |  193 | SA          | Saudi Arabia     | SAR          |
+ |   25 |          | http://www.englishtown.com/ar-sa/                                                        | NULL |  193 |  193 | SA          | Saudi Arabia     | SAR          |
+ |   26 |          | http://www.englishtown.com/ru-ru/buy/default/member/                                     | NULL |  191 |  191 | RU          | Russia           | RUB          |
+ |   27 |          | http://www.englishtown.ru/                                                               | NULL |  191 |  191 | RU          | Russia           | RUB          |
+ |   28 |          | http://www.englishtown.com/es-pe/                                                        | NULL |  174 |  174 | PE          | Peru             | PEN          |
+ |   29 |          | http://www.englishtown.com/es-mx/lp/os/lplearnenglishonline/                             | NULL |  157 |  157 | MX          | Mexico           | MXN          |
+ |   30 |          | http://www.englishtown.com/es-mx/buy/default/member/                                     | NULL |  157 |  157 | MX          | Mexico           | MXN          |
+ |   31 |          | http://www.englishtown.com/es-mx/                                                        | NULL |  157 |  157 | MX          | Mexico           | MXN          |
+ |   32 |          | http://www.englishtown.com/ko-kr/buy/default/member/                                     | NULL |  122 |  122 | KR          | South Korea      | KRW          |
+ |   33 |          | http://www.englishtown.com/ko-kr/                                                        | NULL |  122 |  122 | KR          | South Korea      | KRW          |
+ |   34 |          | http://www.englishtown.co.jp/buy/default/member/                                         | NULL |  114 |  114 | JP          | Japan            | JPY          |
+ |   35 |          | http://www.englishtown.co.jp/                                                            | NULL |  114 |  114 | JP          | Japan            | JPY          |
+ |   36 |          | http://www.englishtown.it/it-it/lp/os/business-1/                                        | NULL |  110 |  110 | IT          | Italy            | EUR          |
+ |   37 |          | http://www.englishtown.it/buy/default/member/                                            | NULL |  110 |  110 | IT          | Italy            | EUR          |
+ |   38 |          | http://www.englishtown.it/                                                               | NULL |  110 |  110 | IT          | Italy            | EUR          |
+ |   39 |          | http://www.englishtown.com/id-id/                                                        | NULL |  101 |  101 | ID          | Indonesia        | IDR          |
+ |   40 |          | http://www.englishtown.com/en-gb/lp/os/automation-test-learn-english-online-02/          | NULL |   77 |   77 | GB          | United Kingdom   | GBP          |
+ |   41 |          | http://www.englishtown.com/en-gb/buy/default/member/                                     | NULL |   77 |   77 | GB          | United Kingdom   | GBP          |
+ |   42 |          | http://www.englishtown.com/en-gb/                                                        | NULL |   77 |   77 | GB          | United Kingdom   | GBP          |
+ |   43 |          | http://www.englishtown.fr/buy/default/member/                                            | NULL |   75 |   75 | FR          | France           | EUR          |
+ |   44 |          | http://www.englishtown.fr/                                                               | NULL |   75 |   75 | FR          | France           | EUR          |
+ |   45 |          | http://www.englishtown.es/lp/os/learn-english-online-01/                                 | NULL |   68 |   68 | ES          | Spain            | EUR          |
+ |   46 |          | http://www.englishtown.es/buy/default/member/                                            | NULL |   68 |   68 | ES          | Spain            | EUR          |
+ |   47 |          | http://www.englishtown.es/                                                               | NULL |   68 |   68 | ES          | Spain            | EUR          |
+ |   48 |          | http://www.englishtown.com/de-de/lp/os/automation-test-01-stwt/                          | NULL |   57 |   57 | DE          | Germany          | EUR          |
+ |   49 |          | http://www.englishtown.de/lp/os/01-stwt1/                                                | NULL |   57 |   57 | DE          | Germany          | EUR          |
+ |   50 |          | http://www.englishtown.de/buy/default/member/                                            | NULL |   57 |   57 | DE          | Germany          | EUR          |
+ |   51 |          | http://www.englishtown.de/                                                               | NULL |   57 |   57 | DE          | Germany          | EUR          |
+ |   52 |          | http://englishlive.ef.com/es-co/lp/oe/promo-upgrade-g/                                   | NULL |   49 |   49 | CO          | Colombia         | COP          |
+ |   53 |          | http://englishlive.ef.com/es-co/                                                         | NULL |   49 |   49 | CO          | Colombia         | COP          |
+ |   54 |          | http://www.englishtown.com.br/lp/ee/ee_abr14/                                            | NULL |   31 |   31 | BR          | Brazil           | BRL          |
+ |   55 |          | http://www.englishtown.com.br/buy/default/member/                                        | NULL |   31 |   31 | BR          | Brazil           | BRL          |
+ |   56 |          | http://www.englishtown.com.br/                                                           | NULL |   31 |   31 | BR          | Brazil           | BRL          |
+ |   57 |          | http://www.englishtown.com/es-ar                                                         | NULL |   10 |   10 | AR          | Argentina        | ARS          |
+ |   58 |          | http://www.englishtown.com/ar-wws/lp/ee/10001/?ctr=om                                    | NULL |  172 |  172 | OM          | Oman             | OMR          |
+ +------+----------+------------------------------------------------------------------------------------------+------+------+------+-------------+------------------+--------------+
+ 54 rows in set (0.00 sec)
+
+
+
+
+
+
+
+
+
+
+
+ **/

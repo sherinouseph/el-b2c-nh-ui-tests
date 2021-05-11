@@ -1,0 +1,8 @@
+#--------------------------------------------------------------------------------
+# IT how it works page composite spec
+# Date : 22/11/2016
+#--------------------------------------------------------------------------------
+#
+@import modules/homepage_header_it.gspec
+@import modules/homepage_footer_it.gspec
+@import modules/howitworkspage_content_it.gspec

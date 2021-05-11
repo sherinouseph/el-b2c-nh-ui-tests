@@ -1,0 +1,18 @@
+{
+  "GatewayType": "Paymentech",
+  "RefNumber": "123456",
+  "Email": "fred@soapui.test",
+  "Amount": 15.09,
+  "Currency": "EUR",
+  "ExtraInfo":
+  {
+    "country":"DE",
+    "accountType": "DirectDebit",
+    "ddAccountName": "AccNameNiko",
+    "ddCountry": "DE",
+    "ddBIC": "PSSTFRPPCNE",
+    "ddRibCode": "34",
+    "ddIBAN": "FR7610011000200012345678934"
+  },
+  "User_id": 1287
+}

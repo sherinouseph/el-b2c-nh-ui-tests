@@ -1,0 +1,39 @@
+#-----------------------------------------------------------------------------------------
+# IT Pricing page spec
+# 1. There going to be 2 cards(lucy)
+# 2. On desktop they side by side on mobile one under the other with space
+# URL: http://englishlive.ef.com/it-it/offerta-inglese/
+# Date : 16/11/2016
+# Has One packages and 2 x packages
+#$('.packages .package')
+# [div.package, div.package]
+#-----------------------------------------------------------------------------------------
+# # 2 items that could be referred as  menu.item-1 and menu.item-2 # one header and one footer each
+@objects
+    package                             css      .packages
+           item-*                       css      .package
+                 #header                 css      .header
+                 #footer                 css      .footer
+@groups
+    package_list        package_item-1, package_item-2
+#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Set values
+#@@ set noOfPackages         ${count("item-*")}
+#@@ set lastPackItemNo       cart-item-${noOfPackages}
+#
+#------------------------------------------------------------------------------------------
+= content =
+     @on mobile, tablet
+         package.item-2:
+                       below package.item-1 20 to 100 px
+
+     @on desktop
+         package.item-2:
+                       right-of package.item-1 15 to 100 px
+     @on *
+         package, package.item-1, package.item-2:
+                                                visible
+
+         package.item-*:
+                       component moduleitems\package_item.gspec

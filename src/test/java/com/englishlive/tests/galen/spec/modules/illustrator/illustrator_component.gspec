@@ -1,0 +1,141 @@
+#-----------------------------------------------------------------------------------------
+# Illustrator
+# https://jira.eflabs.io/browse/SAND-4718
+# Date : 30/10/2017
+# for each of the test cases check main component position
+# Caption size	Regular 36 / small 32
+# Caption position [left, center]
+# Content type 	parsys/images/form/txt
+# Content position	default[top] / bottom
+# Narrower	untick
+# Layout	Start 2 End / end to start
+# Vertical position 	Top / bottom
+# out of scope for the test  -- it is tested other test
+# Bullet image bg clolour	green / *
+# Button link passion 	default
+#
+    # image , parser ,
+    # the text on top Test 1 ...e t c
+#
+#-----------------------------------------------------------------------------------------
+#
+
+@objects
+    illustrator-content-*        css     section.illustrator .stretcher
+    illustrator-opening-text-*   css     section.illustrator .opening p
+    illustrator-caption-title-*  css     section.illustrator .caption p
+#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+#= All Illustrator components =
+#    illustrator-content:
+#                        aligned horizontally "${contentAlignment}" "${alignedWithMeElement}"
+= check components position and font size =
+  @on desktop
+     illustrator-content-1:
+                                 aligned horizontally top illustrator-opening-text-1
+     illustrator-caption-title-1:
+                                 right-of illustrator-content-1
+                                 below illustrator-opening-text-1
+                                 css font-size is "36px"
+
+
+     illustrator-content-2:
+                                 aligned horizontally top illustrator-opening-text-2
+     illustrator-caption-title-2:
+                                 left-of illustrator-content-2
+                                 below illustrator-opening-text-2
+
+
+     illustrator-caption-title-3:
+                                 right-of illustrator-content-3
+                                 below illustrator-opening-text-3
+
+
+     illustrator-content-4:
+                                 aligned horizontally top illustrator-opening-text-4
+     illustrator-caption-title-4:
+                                 right-of illustrator-content-4
+                                 below illustrator-opening-text-4
+
+
+     illustrator-caption-title-5:
+                                 left-of illustrator-content-5
+                                 below illustrator-opening-text-5
+                                 css font-size is "32px"
+
+
+     illustrator-caption-title-6:
+                                 left-of illustrator-content-6
+                                 below illustrator-opening-text-6
+
+
+     illustrator-content-7:
+                                 aligned horizontally top illustrator-opening-text-7
+     illustrator-caption-title-7:
+                                 right-of illustrator-content-7
+                                 below illustrator-opening-text-7
+
+
+     illustrator-caption-title-8:
+                                 left-of illustrator-content-8
+                                 below illustrator-opening-text-8
+
+
+     illustrator-content-9:
+                                 aligned horizontally top illustrator-opening-text-9
+     illustrator-caption-title-9:
+                                 right-of illustrator-content-9
+
+
+     illustrator-caption-title-10:
+                                 above illustrator-content-10
+
+
+     illustrator-caption-title-11:
+                                 right-of illustrator-content-11
+
+
+  @on mobile
+     illustrator-content-1:
+                                 below illustrator-opening-text-1
+                                 below illustrator-caption-title-1 5 to 15 px
+     illustrator-caption-title-1:
+                                 below illustrator-opening-text-1
+                                 css font-size is "30px"
+
+
+     illustrator-content-2:
+                                 above illustrator-opening-text-2
+                                 above illustrator-caption-title-2
+     illustrator-caption-title-2:
+                                 below illustrator-opening-text-2
+                                 css font-size is "25px"
+
+     illustrator-content-3:
+                                 below illustrator-opening-text-3
+                                 below illustrator-caption-title-3 40 to 70 px
+
+
+
+
+
+
+
+
+# works
+#                illustrator-content-1:
+#                                     aligned horizontally top illustrator-opening-text-1
+#                 illustrator-content-5:
+#                                     aligned horizontally top illustrator-opening-text-5
+# ends works
+#illustrator-content:
+    #                    visible
+    #illustrator-caption-title:
+    #                   visible
+    #@forEach [illustrator-content-*] as index
+    #         @if ${index === 1}
+    #illustrator-opening-text:
+    #                    visible
+#= check component positin and style =
+   #if (illustrator-caption-title

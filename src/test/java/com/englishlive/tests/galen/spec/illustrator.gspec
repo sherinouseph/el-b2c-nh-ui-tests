@@ -1,0 +1,56 @@
+#--------------------------------------------------------------------------------
+#  COMPOSITE speck
+#  Date : 31/10/2017
+#--------------------------------------------------------------------------------
+#
+
+@import modules/illustrator/illustrator_component.gspec
+#@import lib/galen-extras/galen-extras-rules.gspec
+
+@objects
+    illustrator-item-*        css   section.illustrator
+
+= Load All illustrators =
+    illustrator-item-*:
+                       component modules/illustrator/illustrator_component.gspec
+
+
+#                                 aligned horizontally top illustrator-opening-text
+# as item, index as i
+#= Each illustrator items =
+#    @forEach [illustrator-item-*] as index
+#         @if ${index === 1}
+#             illustrator-content:
+#                                 aligned horizontally top illustrator-opening-text
+
+ #        @else ${index === 5}
+ #            illustrator-content:
+ #                                aligned vertically top illustrator-opening-text
+
+
+
+
+
+
+
+
+    #@on desktop
+
+        #@if ${count("illustrator-item-*") === 3}
+        #    illustrator-content:
+        #                          aligned horizontally top illustrator-opening-text
+
+        #    illustrator-caption-title:
+        #                          right-of illustrator-content
+        #                          below illustrator-opening-text
+        #                          css font-size is "36px"
+
+
+        #@if{illustrator-item-* === 2}
+        #    illustrator-content:
+        #                          aligned horizontally top illustrator-opening-text
+
+        #    illustrator-caption-title:
+        #                          right-of illustrator-content
+        #                          below illustrator-opening-text
+        #                          css font-size is "32px"

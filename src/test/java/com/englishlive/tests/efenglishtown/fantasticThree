@@ -1,0 +1,36 @@
+From: Martin Cui <Martin.Cui@EF.com>
+Date: Wednesday, 18 November 2015 at 12:27
+To: Rosalba Pastran <Rosalba.Pastran@EF.com>, Marcin Chirowski <Marcin.Chirowski@EF.com>, Rene Villegas <Rene.Villegas@EF.com>, Lorenzo De Nigris <Lorenzo.Denigris@EF.com>, Vahid Pourahmary <Vahid.Pourahmary@EF.com>, Paran Karunaharan <Paran.Karunaharan@EF.com>, Liam Atkins <Liam.Atkins@EF.com>, Nikol Marku <Nikol.Marku@EF.com>
+Subject: www.efenglishtown.com is on live
+
+1 – www.efenglishtown.com is visible now.
+2 – direct visit to this domain in our office will be redirected to http://www.efenglishtown.com/es-us/lp/os/home/ (which shows 404 page now since it’s not there yet) (because we are logically in US).
+3 – direct visit to this domain from other countries in the list should see these pages accordingly. For now you can add “ctr=XX” to mimic it.
+de           /de-de/lp/os/home/
+gb           /en-gb/lp/os/home/
+ru            /ru-ru/lp/os/home/
+sa            /ar-sa/lp/os/home/
+it             /it-it/lp/os/home/
+fr             /fr-fr/lp/oe/home/
+tr             /tr-tr/lp/os/home/
+jp            /ja-jp/lp/os/home/
+us           /es-us/lp/os/home/
+mx          /es-mx/lp/oe/home/
+co           /es-co/lp/oe/home/
+pe           /es-pe/lp/oe/home/
+ve           /es-ve/lp/oe/home/
+cl             /es-cl/lp/oe/home/
+tw           /zh-tw/lp/oe/home/
+4 – www.efenglishtown.com/robots.txt is showing whatever sent by Rosalba.
+5 – Fwiw, I created these 2 pages for test purpose: www.efenglishtown.com?ctr=fr (with OE form on it) and www.efenglishtown.com?ctr=de  (with working OS flow on it, basic etag and partner tracking will be there but third party tracking will be lost as agreed in previous emails).
+6 – other requests to the sites will be redirected to wherever the equivalent pages under the correct domain and path. E.g.
+                http://www.efenglishtown.com/fr-fr/apprendre-l-anglais-en-ligne/ 
+               will be redirected to 
+               http://www.englishtown.fr/apprendre-l-anglais-en-ligne/
+               for now. But after November 25th which is next Wednesday it will be redirected to 
+               http://englishlive.ef.com/fr-fr/apprendre-l-anglais-en-ligne/
+ 
+ 
+ 
+Regards.
+Martin Cui

@@ -1,0 +1,45 @@
+#------------------------------------------------------------------------------------------
+# IT footer page speck
+# Date : 26/10/2016
+#
+#------------------------------------------------------------------------------------------
+#
+@objects
+    footer              css      footer
+    footerCaptions      css      footer .constraint.grid
+    footerLinks         css      footer .links
+
+# Only for IT
+# footerWhatDistingue css      footer .constraint.grid p:contains('COSA CI DISTINGUE')
+# footerScopriEf      css      footer .constraint.grid p:contains('SCOPRI EF')
+#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+= footer =
+     = Footer Captions =
+         @on mobile
+           footerCaptions:
+                         height 170 to 510px
+                         width  375 to 620px
+         @on tablet
+           footerCaptions:
+                         height 270 to 510px
+                         width  670 to 700px
+         @on desktop
+           footerCaptions:
+                         height 200 to 350px
+                         width  1160 to 1180px
+
+     = Footer Main Links =
+         @on mobile
+           footerLinks:
+                      height 100 to 275px
+                      width  380 to 550px
+         @on tablet
+           footerLinks:
+                      height 100 to 265px
+                      width  660 to 700px
+         @on desktop
+           footerLinks:
+                      height 12 to 30px
+                      width  1160 to 1180px

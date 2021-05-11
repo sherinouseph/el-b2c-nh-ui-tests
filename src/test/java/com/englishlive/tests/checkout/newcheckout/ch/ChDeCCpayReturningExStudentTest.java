@@ -1,0 +1,59 @@
+//package com.englishlive.tests.checkout.newcheckout.ch;
+///**
+// * New checkout
+// */
+//import com.englishtown.tests.checkout.common.core.BaseCCpayReturningStudent;
+//import com.englishtown.tests.core.BaseTestConfig;
+//import com.englishtown.tests.core.EfConstants;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+//import org.springframework.beans.factory.annotation.Value;
+//import org.testng.annotations.AfterClass;
+//import org.testng.annotations.BeforeClass;
+//
+////Edit creditcard link not a link
+//public class ChDeCCpayReturningExStudentTest extends BaseCCpayReturningStudent {
+//    private static final Logger logger = LoggerFactory.getLogger(ChDeCCpayReturningExStudentTest.class);
+//    @Value("#{applicationPropertiesList['new.checkout.member.de.ch.url']}")
+//    protected String currMemberPageUrl;
+//    private String myRmLoginSelector = ".form span a";
+//    private String myConfirmPayBtnId = "form_tabctrl_tab-1_button";
+//    private String myOfferNotValidLinkCss = "#form_tabctrl_tab-1_form-form .message p a";
+//
+//
+//    @BeforeClass
+//    public void setup(){
+//        setThreadSafeDriver();
+//        phase1OfferPrice ="59";
+//        setLanguageAndMarket("de","ch");
+//        failTestIfIsNotBrowser(CHROME_BROWSER_LIST, "Chrome Only Test ....!");
+//        isClickTabId = true;
+//        creditCardLinkText="Kreditkarte";
+//        validationMsgContainsTxt = "fortfahren zu können";
+//        tabId = 1;
+//        memberPageUrl = currMemberPageUrl;
+//        setSubmitBtn("input[value=Einloggen");
+//        rmLoginSelector = myRmLoginSelector;
+//        confirPayBtnId = myConfirmPayBtnId;
+//        formDataMap = EfConstants.deMembersWithPhoneMap; //ukMembersFormMap_new;
+//        isNewDesignLogin = true;
+//        password = BaseTestConfig.getPassword8();
+//        offerNotValidLinkCss = myOfferNotValidLinkCss;
+//        logger.info("setup url: " + memberPageUrl + " ENV is : " + getENVIRONMENT());
+//        openUrl(getWebDriver(), memberPageUrl, -1 ) ;
+//    }
+//
+//    @Override
+//    protected String getMemberPageUrl() {
+//        memberPageUrl = currMemberPageUrl;
+//        return memberPageUrl;
+//    }
+//
+//
+//    @AfterClass
+//    protected void testAfterClass(){
+//        destroyDriver();
+//    }
+//
+//}
+//

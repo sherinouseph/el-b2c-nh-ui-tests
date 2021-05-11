@@ -1,0 +1,10 @@
+diff a/src/test/java/com/englishlive/tests/experience/core/BaseCheckExperienceTest.java b/src/test/java/com/englishlive/tests/experience/core/BaseCheckExperienceTest.java	(rejected hunks)
+@@ -117,7 +117,7 @@
+     /**
+      * Req 7. exp=v001|v035|v887 experience[open homepage exp=v001]
+      *        then go to https://qa-englishlive.ef.com/es-mx/lp/oe/es-experience-autotest/
+-     */
++     *
+     @Test(timeOut = TEST_TIMEOUT_SHORT_MLS)
+     void testExpPersistedWhenNewUrlOpen(){
+         try{

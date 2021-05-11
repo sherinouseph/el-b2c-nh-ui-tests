@@ -1,0 +1,1 @@
+ProcessClose ( "chrome.exe" )

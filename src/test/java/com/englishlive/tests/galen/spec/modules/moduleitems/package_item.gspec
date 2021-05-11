@@ -1,0 +1,41 @@
+#-----------------------------------------------------------------------------------------
+# Package Item gspec
+# URL: http://englishlive.ef.com/it-it/offerta-inglese/
+# Date : 16/11/2016
+# an Item has :
+#             .header [  .nagging, h2 ,.desc, .pricing, .cta, .disclaimer]
+#             .footer [  ul li] a list of them some active and some no but there must be at least 1
+#               disclaimer should be in 2 lines in desktop view H 28 pixel and one line on Tab/mob 14 pixel
+#
+# see https://github.com/galenframework/workshop-shopping-cart/blob/master/galen-tests/specs/cart-item.spec
+# TODO add test for disclaimer being in 2 lines
+#-----------------------------------------------------------------------------------------
+# # $('.package .header h2')
+@objects
+    headerH2                             css      .header h2
+    headerDesc                           css      .header .desc
+    headerPricing                        css      .header .pricing
+    headerCta                            css      .header .cta
+    headerdisclaimer                     css      .header .disclaimer
+    footer-item-*                        css      .footer ul li
+#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Set values
+#@@ set noOfPackages         ${count("item-*")}
+#@@ set lastPackItemNo       cart-item-${noOfPackages}
+#------------------------------------------------------------------------------------------
+#
+= package item =
+     @on mobile
+         headerdisclaimer:
+                          height 10 to 50 px
+
+     @on desktop
+         headerdisclaimer:
+                          height 10 to 50 px
+
+     @on *
+         headerH2, headerDesc, headerPricing, headerPricing, headerCta, headerdisclaimer,  footer-item-1 :
+                                                                                                         inside parent
+                                                                                                         visible
+

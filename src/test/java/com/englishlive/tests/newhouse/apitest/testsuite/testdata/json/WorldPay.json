@@ -1,0 +1,19 @@
+{
+  "GatewayType": "Worldpay",
+  "RefNumber": "123456",
+  "Email": "fred@soapui.test",
+  "Amount": 15.25,
+  "Currency": "BRL",
+  "ExtraInfo": {
+     "country":"FR",
+      "ccFirstName":"Fred",
+      "ccLastName":"Feng",
+      "ccNumber":"4111111111111111",
+      "ccCardVerifyNum":"1234",
+      "ccCardType":"001",
+      "ccExpYear":"2030",
+      "ccExpMonth":"12",
+      "description" : "WorldPay Payment"
+  },
+  "User_id": 1287
+}

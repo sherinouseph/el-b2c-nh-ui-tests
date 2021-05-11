@@ -1,0 +1,21 @@
+{
+  "GatewayType": "PayU",
+  "RefNumber": "123456",
+  "Email": "fred@soapui.test",
+  "Amount": 15,
+  "Currency": "BRL",
+  "ExtraInfo": 
+   {
+      "country":"BR",
+      "ccFirstName":"Fred",
+      "ccLastName":"Feng",
+      "ccNumber":"4111111111111111",
+      "ccCardVerifyNum":"1234",
+      "ccCardType":"VISA",
+      "ccExpYear":"2030",
+      "ccExpMonth":"12",
+      "customerName":"Fred",
+      "cvc":"321"
+    },
+  "User_id": 1287
+}

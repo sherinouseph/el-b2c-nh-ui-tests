@@ -1,0 +1,12 @@
+<suite name="Test-method Suite" parallel="classes" thread-count="6" >
+    <test name="Test-method test" group-by-instances="true">
+        <classes>
+            <class name="com.englishlive.tests.checkout.newcheckout.de.CcDECheckoutWithPhoneTest" />
+            <class name="com.englishlive.tests.checkout.newcheckout.fr.PayPalFrCheckoutTest" />
+            <class name="com.englishlive.tests.checkout.newcheckout.it.CcITCheckoutTest" />
+            <class name="com.englishlive.tests.checkout.newcheckout.uk.CcUKCheckoutFlowTest" />
+            <class name="com.englishlive.tests.checkout.newcheckout.uk.CcUKCheckoutFlowTest" />
+            <class name="com.englishlive.tests.checkout.newcheckout.de.CcDECheckoutWithPhoneTest" />
+        </classes>
+    </test>
+</suite>

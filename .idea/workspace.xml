@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="8a98f636-af10-49df-867c-d0f9807dd10c" name="Default Changelist" comment="" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="englishtown-tests" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+        <option value="package-info" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="importAutomatically" value="true" />
+      </MavenImportingSettings>
+    </option>
+    <option name="enabledProfiles">
+      <list>
+        <option value="schoolqa" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1TZQKEhT3CmguniufKSb9HIHjqs" />
+  <component name="PropertiesComponent">
+    <property name="TODO_SCOPE" value="All Places" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="MavenSettings" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.englishtown.tests.core.school.teachersfirst" />
+      <recent name="com.englishlive.tests.newhouse.school.teachersfirst" />
+      <recent name="com.englishtown.newhouse.school.pages.teachersfirst.modules" />
+      <recent name="com.englishtown.newhouse.school.pages.teachersfirst" />
+      <recent name="com.englishtown.newhouse.school.pages.classroom" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\work\project\qa\src\test\java\com\englishlive\tests\newhouse\school\course\appsandtools" />
+      <recent name="C:\work\project\qa\src\test\java\com\englishlive\tests\newhouse\school\schooltestswithoutcaptcha" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="TestNG.BookCancelEFTVTest">
+    <configuration name="BookCancelEFTVTest" type="TestNG" temporary="true" nameIsGenerated="true">
+      <module name="qa" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.englishlive.tests.newhouse.school.classroom.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.englishlive.tests.newhouse.school.classroom" />
+      <option name="MAIN_CLASS_NAME" value="com.englishlive.tests.newhouse.school.classroom.BookCancelEFTVTest" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="BookCancelRefundPLTest" type="TestNG" temporary="true" nameIsGenerated="true">
+      <module name="qa" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.englishlive.tests.newhouse.school.classroom.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.englishlive.tests.newhouse.school.classroom" />
+      <option name="MAIN_CLASS_NAME" value="com.englishlive.tests.newhouse.school.classroom.BookCancelRefundPLTest" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ProgressGETest" type="TestNG" temporary="true" nameIsGenerated="true">
+      <module name="qa" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.englishlive.tests.newhouse.school.course.progressandtest.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.englishlive.tests.newhouse.school.course.progressandtest" />
+      <option name="MAIN_CLASS_NAME" value="com.englishlive.tests.newhouse.school.course.progressandtest.ProgressGETest" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SchoolSmokeMXTest" type="TestNG" temporary="true" nameIsGenerated="true">
+      <module name="qa" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.englishlive.tests.newhouse.school.schooltestswithoutcaptcha.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.englishlive.tests.newhouse.school.schooltestswithoutcaptcha" />
+      <option name="MAIN_CLASS_NAME" value="com.englishlive.tests.newhouse.school.schooltestswithoutcaptcha.SchoolSmokeMXTest" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SmokeTestProd (1)" type="TestNG" temporary="true" nameIsGenerated="true">
+      <module name="qa" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.englishlive.tests.newhouse.school.prodtests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.englishlive.tests.newhouse.school.prodtests" />
+      <option name="MAIN_CLASS_NAME" value="com.englishlive.tests.newhouse.school.prodtests.SmokeTestProd" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="TestNG.BookCancelEFTVTest" />
+        <item itemvalue="TestNG.BookCancelRefundPLTest" />
+        <item itemvalue="TestNG.ProgressGETest" />
+        <item itemvalue="TestNG.SchoolSmokeMXTest" />
+        <item itemvalue="TestNG.SmokeTestProd (1)" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8a98f636-af10-49df-867c-d0f9807dd10c" name="Default Changelist" comment="" />
+      <created>1573665071967</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1573665071967</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/englishtown/tests/core/school/useraccount/BaseEmailNotificationContentTest.java</url>
+          <line>27</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/englishtown/helpers/utils/TestUtil.java</url>
+          <line>1661</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/englishtown/newhouse/school/pages/account/EmailAndNotificationPage.java</url>
+          <line>75</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/englishtown/newhouse/school/pages/account/BaseAccountSettingPage.java</url>
+          <line>148</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/englishtown/tests/core/BaseTest.java</url>
+          <line>903</line>
+          <option name="timeStamp" value="22" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/englishtown/newhouse/school/pages/upsell/SchoolUpsellPage.java</url>
+          <line>217</line>
+          <option name="timeStamp" value="26" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/englishtown/newhouse/school/pages/account/EmailAndNotificationPage.java</url>
+          <line>122</line>
+          <option name="timeStamp" value="28" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/englishtown/newhouse/school/pages/course/progressandtests/ProgressPage.java</url>
+          <line>206</line>
+          <option name="timeStamp" value="29" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/englishtown/newhouse/school/pages/course/progressandtests/ProgressPage.java</url>
+          <line>204</line>
+          <option name="timeStamp" value="31" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/englishtown/newhouse/school/pages/home/SchoolHeaderPage.java</url>
+          <line>186</line>
+          <option name="timeStamp" value="32" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/englishtown/newhouse/school/pages/course/progressandtests/ProgressPage.java</url>
+          <line>233</line>
+          <option name="timeStamp" value="34" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/englishtown/newhouse/school/pages/teachersfirst/modules/TFTopicCardModule.java</url>
+          <line>127</line>
+          <option name="timeStamp" value="35" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/englishtown/tests/core/school/classroom/BaseBookPLTest.java</url>
+          <line>145</line>
+          <option name="timeStamp" value="36" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/com/englishtown/tests/core/school/useraccount/BaseEmailNotificationContentTest.java</url>
+          <line>35</line>
+          <properties class="com.englishtown.tests.core.school.useraccount.BaseEmailNotificationContentTest" method="checkUpdatesSpecialOffers">
+            <option name="EMULATED" value="true" />
+          </properties>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="TestNG">
+        <watch expression="getWebDriver().findElement(By.cssSelector(closeButtonTimeZone)).click()" language="JAVA" />
+        <watch expression="switchToFrame(getWebDriver(),iframes.get(0))" language="JAVA" />
+        <watch expression="click(toggleWe)" language="JAVA" />
+        <watch expression="click(currentCourseUnitPage.activityStepsListWe.get(1))" language="JAVA" />
+        <watch expression="click(currentCourseUnitPage.activityCloseBtnWe)" language="JAVA" />
+        <watch expression="cardTopicListWe.get(0)" language="JAVA" />
+        <watch expression="AssertHelper.assertComponentsDisplayed" language="JAVA" />
+      </configuration>
+    </watches-manager>
+  </component>
+</project>

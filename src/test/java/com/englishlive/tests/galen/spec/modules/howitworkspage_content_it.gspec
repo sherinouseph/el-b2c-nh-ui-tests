@@ -1,0 +1,35 @@
+#-----------------------------------------------------------------------------------------
+# IT how it works content page speck
+# Date : 26/10/2016
+#
+#-----------------------------------------------------------------------------------------
+#
+@objects
+    nav_secondary          css      nav.secondary
+           active_item     css      li.active
+           item-*          css      li
+    tabItems-*             css      .tabs .tab-item
+#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+= main content =
+     @on mobile, tablet, desktop
+         nav_secondary:
+                      visible
+     @on mobile, tablet
+         nav_secondary:
+                      width < 769 px
+         nav_secondary.item-4:
+                             absent
+         tabItems-1:
+                   width 370 to 769 px
+                   aligned vertically all tabItems-2
+
+     @on desktop
+         nav_secondary.item-1:
+                             width < 300 px
+         nav_secondary.item-4:
+                             right-of nav_secondary.item-2 > 30 px
+         tabItems-1:
+                   width < 300 px
+                   aligned horizontally all tabItems-3

@@ -1,0 +1,8 @@
+#--------------------------------------------------------------------------------
+# IT home page COMPOSITE speck
+# Date : 26/10/2016
+#--------------------------------------------------------------------------------
+#
+@import modules\homepage_header_it.gspec
+@import modules\homepage_footer_it.gspec
+@import modules\pricepage_content_it.gspec

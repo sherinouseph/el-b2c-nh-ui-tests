@@ -1,0 +1,22 @@
+#------------------------------------------------------------------------------------------
+# Check CRM form image new user
+# Date : 26/05/2017
+#
+#------------------------------------------------------------------------------------------
+#
+@objects
+    formset_inner-*    css      .formset .inner
+
+#
+#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+= newUserForm =
+     @on desktop
+         formset_inner-5:
+             visible
+             image file /imagecompare/baseimage/CrmMagicExistingUserForgerPassForm1.png, analyze-offset 10, filter blur 4, stretch, tolerance 10, error 20%
+             #  analyze-offset 10, filter blur 4, stretch, tolerance 10,
+             #, analyze-offset 10, filter blur 4
+
+

@@ -1,0 +1,1472 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions name="SubscriptionService" targetNamespace="http://tempuri.org/"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+                  xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+                  xmlns:tns="http://tempuri.org/"
+                  xmlns:wsa10="http://www.w3.org/2005/08/addressing"
+                  xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
+        >
+    <wsp:Policy wsu:Id="NetTcpBinding_ISubscriptionService_policy">
+        <wsp:ExactlyOne>
+            <wsp:All>
+                <msb:BinaryEncoding xmlns:msb="http://schemas.microsoft.com/ws/06/2004/mspolicy/netbinary1"/>
+                <wsaw:UsingAddressing/>
+            </wsp:All>
+        </wsp:ExactlyOne>
+    </wsp:Policy>
+    <wsdl:types>
+        <xs:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/"
+                   xmlns:xs="http://www.w3.org/2001/XMLSchema">
+            <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+            <xs:import namespace="EFSchools.Englishtown.Commerce.Client.Subscriptions"/>
+            <xs:import namespace="EFSchools.Englishtown.Commerce.Client.FeatureAccess"/>
+            <xs:element name="ExtendCurrentSubscription">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="member_id" type="xs:int"/>
+                        <xs:element minOccurs="0" name="extendDays" type="xs:int"/>
+                        <xs:element minOccurs="0" name="reason" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="comments" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="systemNotes" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ExtendCurrentSubscriptionResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="ExtendCurrentSubscriptionResult" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="CancelSubscription">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="member_id" type="xs:int"/>
+                        <xs:element minOccurs="0" name="reason" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="comments" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="systemNotes" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="CancelSubscriptionResponse">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="MarkForCancellation">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="member_id" type="xs:int"/>
+                        <xs:element minOccurs="0" name="reason" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="comments" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="MarkForCancellationResponse">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="MarkForCancellationWithMultipleReasons">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="member_id" type="xs:int"/>
+                        <xs:element minOccurs="0" name="categoryCode" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="note" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="comments" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="isCancelledByStudent" type="xs:boolean"/>
+                        <xs:element minOccurs="0" name="reasonCodes" nillable="true" type="q1:ArrayOfstring"
+                                    xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="MarkForCancellationWithMultipleReasonsResponse">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="UndoMarkForCancellation">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="member_id" type="xs:int"/>
+                        <xs:element minOccurs="0" name="comments" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="UndoMarkForCancellationResponse">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetActiveSubscription">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="member_id" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetActiveSubscriptionResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetActiveSubscriptionResult" nillable="true"
+                                    type="q2:SubscriptionInfo"
+                                    xmlns:q2="EFSchools.Englishtown.Commerce.Client.Subscriptions"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetAllSubscriptions">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="member_id" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetAllSubscriptionsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetAllSubscriptionsResult" nillable="true"
+                                    type="q3:ArrayOfSubscriptionInfo"
+                                    xmlns:q3="EFSchools.Englishtown.Commerce.Client.Subscriptions"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetBatchSubscriptions">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="_params" nillable="true" type="q4:GetBatchSubscriptionsParamsType"
+                                    xmlns:q4="EFSchools.Englishtown.Commerce.Client.Subscriptions"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetBatchSubscriptionsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetBatchSubscriptionsResult" nillable="true"
+                                    type="q5:GetBatchSubscriptionsResult"
+                                    xmlns:q5="EFSchools.Englishtown.Commerce.Client.Subscriptions"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AddFeatureAccessGrants">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="grant" nillable="true" type="q6:FeatureAccessGrant"
+                                    xmlns:q6="EFSchools.Englishtown.Commerce.Client.FeatureAccess"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AddFeatureAccessGrantsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="AddFeatureAccessGrantsResult" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ChargeFeatureAccess">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="member_id" type="xs:int"/>
+                        <xs:element minOccurs="0" name="featureAccess_id" type="xs:int"/>
+                        <xs:element minOccurs="0" name="chargeDate" type="xs:dateTime"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ChargeFeatureAccessResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="ChargeFeatureAccessResult" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="IsRecurringOrder">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="order_id" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="IsRecurringOrderResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="IsRecurringOrderResult" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="LicenseTransferByMemberId">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="licenseTransferParams" nillable="true"
+                                    type="q7:LicenseTransferParams"
+                                    xmlns:q7="EFSchools.Englishtown.Commerce.Client.Subscriptions"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="LicenseTransferByMemberIdResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="LicenseTransferByMemberIdResult" nillable="true"
+                                    type="q8:LicenseTransferResult"
+                                    xmlns:q8="EFSchools.Englishtown.Commerce.Client.Subscriptions"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetSuspendedSubscription">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="member_id" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetSuspendedSubscriptionResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetSuspendedSubscriptionResult" nillable="true"
+                                    type="q9:SubscriptionInfo"
+                                    xmlns:q9="EFSchools.Englishtown.Commerce.Client.Subscriptions"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="LogChargebackProcess">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="salesOrder_id" type="xs:long"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="LogChargebackProcessResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="LogChargebackProcessResult" nillable="true"
+                                    type="q10:LogChargebackProcessResult"
+                                    xmlns:q10="EFSchools.Englishtown.Commerce.Client.Subscriptions"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified"
+                   targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/"
+                   xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/">
+            <xs:element name="anyType" nillable="true" type="xs:anyType"/>
+            <xs:element name="anyURI" nillable="true" type="xs:anyURI"/>
+            <xs:element name="base64Binary" nillable="true" type="xs:base64Binary"/>
+            <xs:element name="boolean" nillable="true" type="xs:boolean"/>
+            <xs:element name="byte" nillable="true" type="xs:byte"/>
+            <xs:element name="dateTime" nillable="true" type="xs:dateTime"/>
+            <xs:element name="decimal" nillable="true" type="xs:decimal"/>
+            <xs:element name="double" nillable="true" type="xs:double"/>
+            <xs:element name="float" nillable="true" type="xs:float"/>
+            <xs:element name="int" nillable="true" type="xs:int"/>
+            <xs:element name="long" nillable="true" type="xs:long"/>
+            <xs:element name="QName" nillable="true" type="xs:QName"/>
+            <xs:element name="short" nillable="true" type="xs:short"/>
+            <xs:element name="string" nillable="true" type="xs:string"/>
+            <xs:element name="unsignedByte" nillable="true" type="xs:unsignedByte"/>
+            <xs:element name="unsignedInt" nillable="true" type="xs:unsignedInt"/>
+            <xs:element name="unsignedLong" nillable="true" type="xs:unsignedLong"/>
+            <xs:element name="unsignedShort" nillable="true" type="xs:unsignedShort"/>
+            <xs:element name="char" nillable="true" type="tns:char"/>
+            <xs:simpleType name="char">
+                <xs:restriction base="xs:int"/>
+            </xs:simpleType>
+            <xs:element name="duration" nillable="true" type="tns:duration"/>
+            <xs:simpleType name="duration">
+                <xs:restriction base="xs:duration">
+                    <xs:pattern value="\-?P(\d*D)?(T(\d*H)?(\d*M)?(\d*(\.\d*)?S)?)?"/>
+                    <xs:minInclusive value="-P10675199DT2H48M5.4775808S"/>
+                    <xs:maxInclusive value="P10675199DT2H48M5.4775807S"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="guid" nillable="true" type="tns:guid"/>
+            <xs:simpleType name="guid">
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:attribute name="FactoryType" type="xs:QName"/>
+            <xs:attribute name="Id" type="xs:ID"/>
+            <xs:attribute name="Ref" type="xs:IDREF"/>
+        </xs:schema>
+        <xs:schema elementFormDefault="qualified" targetNamespace="EFSchools.Englishtown.Commerce.Client.Exceptions"
+                   xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="EFSchools.Englishtown.Commerce.Client.Exceptions">
+            <xs:complexType name="CommerceServiceExceptionDetail">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>&lt;summary&gt;
+
+                        &lt;/summary&gt;</xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="Reason" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>&lt;summary&gt;
+
+                                &lt;/summary&gt;</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="CommerceServiceExceptionDetail" nillable="true"
+                        type="tns:CommerceServiceExceptionDetail"/>
+        </xs:schema>
+        <xs:schema elementFormDefault="qualified"
+                   targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays"
+                   xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+            <xs:complexType name="ArrayOfstring">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="ArrayOfstring" nillable="true" type="tns:ArrayOfstring"/>
+            <xs:complexType name="ArrayOfint">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="int" type="xs:int"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="ArrayOfint" nillable="true" type="tns:ArrayOfint"/>
+            <xs:complexType name="ArrayOfKeyValueOfstringstring">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+                    </xs:appinfo>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringstring">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="Key" nillable="true" type="xs:string"/>
+                                <xs:element name="Value" nillable="true" type="xs:string"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="ArrayOfKeyValueOfstringstring" nillable="true" type="tns:ArrayOfKeyValueOfstringstring"/>
+        </xs:schema>
+        <xs:schema elementFormDefault="qualified" targetNamespace="EFSchools.Englishtown.Commerce.Client.Subscriptions"
+                   xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="EFSchools.Englishtown.Commerce.Client.Subscriptions">
+            <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+            <xs:import namespace="EFSchools.Englishtown.Commerce.Client"/>
+            <xs:complexType name="SubscriptionInfo">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>&lt;summary&gt;
+
+                        &lt;/summary&gt;</xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element name="Subscription_id" nillable="true" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>&lt;summary&gt;
+
+                                &lt;/summary&gt;</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="Member_id" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>&lt;summary&gt;
+
+                                &lt;/summary&gt;</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="ActivatedDate" nillable="true" type="xs:dateTime">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>&lt;summary&gt;
+
+                                &lt;/summary&gt;</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="DeactivatedDate" nillable="true" type="xs:dateTime">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>&lt;summary&gt;
+
+                                &lt;/summary&gt;</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="ExpirationDate" nillable="true" type="xs:dateTime">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>&lt;summary&gt;
+
+                                &lt;/summary&gt;</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="NextBillingDate" nillable="true" type="xs:dateTime">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>&lt;summary&gt;
+
+                                &lt;/summary&gt;</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="IsActive" type="xs:boolean">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>&lt;summary&gt;
+
+                                &lt;/summary&gt;</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="IsMarkedForCancellation" type="xs:boolean">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>&lt;summary&gt;
+
+                                &lt;/summary&gt;</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="RedemptionCode" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>&lt;summary&gt;
+
+                                &lt;/summary&gt;</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="SalesOrder_id" type="xs:long">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>&lt;summary&gt;
+
+                                &lt;/summary&gt;</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="SubscriptionType" type="tns:SubscriptionTypes">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>&lt;summary&gt;
+
+                                &lt;/summary&gt;</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="SuspendDate" nillable="true" type="xs:dateTime">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>&lt;summary&gt;
+
+                                &lt;/summary&gt;</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ResumeDate" nillable="true" type="xs:dateTime">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>&lt;summary&gt;
+
+                                &lt;/summary&gt;</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="IsRenewable" type="xs:boolean"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="SubscriptionInfo" nillable="true" type="tns:SubscriptionInfo"/>
+            <xs:simpleType name="SubscriptionTypes">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>&lt;summary&gt;
+
+                        &lt;/summary&gt;</xs:documentation>
+                </xs:annotation>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="SelfStudy">
+                        <xs:annotation>
+                            <xs:documentation>&lt;summary&gt;
+
+                                &lt;/summary&gt;</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="TeacherLed">
+                        <xs:annotation>
+                            <xs:documentation>&lt;summary&gt;
+
+                                &lt;/summary&gt;</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="SubscriptionTypes" nillable="true" type="tns:SubscriptionTypes"/>
+            <xs:complexType name="ArrayOfSubscriptionInfo">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="SubscriptionInfo" nillable="true"
+                                type="tns:SubscriptionInfo"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="ArrayOfSubscriptionInfo" nillable="true" type="tns:ArrayOfSubscriptionInfo"/>
+            <xs:complexType name="GetBatchSubscriptionsParamsType">
+                <xs:sequence>
+                    <xs:element name="MemberIds" nillable="true" type="q1:ArrayOfint"
+                                xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+                    <xs:element name="ActiveOnly" type="xs:boolean"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="GetBatchSubscriptionsParamsElement" nillable="true" type="tns:GetBatchSubscriptionsParamsType"/>
+            <xs:complexType name="GetBatchSubscriptionsResult">
+                <xs:complexContent mixed="false">
+                    <xs:extension base="q2:CommerceServiceResultBase" xmlns:q2="EFSchools.Englishtown.Commerce.Client">
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="Subscriptions" nillable="true"
+                                        type="tns:ArrayOfSubscriptionInfo"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+            <xs:element name="GetBatchSubscriptionsResult" nillable="true" type="tns:GetBatchSubscriptionsResult"/>
+            <xs:complexType name="LicenseTransferParams">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>&lt;summary&gt;
+
+                        &lt;/summary&gt;</xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="OperatorName" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>&lt;summary&gt;
+                                Operator name
+                                &lt;/summary&gt;</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="Member_id" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>&lt;summary&gt;
+                                MemberId to be transferred
+                                &lt;/summary&gt;</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="LicenseTransferParams" nillable="true" type="tns:LicenseTransferParams"/>
+            <xs:complexType name="LicenseTransferResult">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>&lt;summary&gt;
+
+                        &lt;/summary&gt;</xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="IsSucceed" type="xs:boolean">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>&lt;summary&gt;
+                                License transfer result status
+                                &lt;/summary&gt;</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ErrorCode" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>&lt;summary&gt;
+                                Error code if any error occurs
+                                &lt;/summary&gt;</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="RedemptionCode" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>&lt;summary&gt;
+                                The new redemption code transferred from the specified member
+                                &lt;/summary&gt;</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="LicenseTransferResult" nillable="true" type="tns:LicenseTransferResult"/>
+            <xs:complexType name="LogChargebackProcessResult">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>&lt;summary&gt;
+
+                        &lt;/summary&gt;</xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="IsSucceed" type="xs:boolean">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>&lt;summary&gt;
+                                License transfer result status
+                                &lt;/summary&gt;</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ErrorCode" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>&lt;summary&gt;
+                                Error code if any error occurs
+                                &lt;/summary&gt;</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="LogChargebackProcessResult" nillable="true" type="tns:LogChargebackProcessResult"/>
+        </xs:schema>
+        <xs:schema elementFormDefault="qualified" targetNamespace="EFSchools.Englishtown.Commerce.Client"
+                   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="EFSchools.Englishtown.Commerce.Client">
+            <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+            <xs:complexType name="CommerceServiceResultBase">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="IsSucceed" type="xs:boolean"/>
+                    <xs:element minOccurs="0" name="Error" nillable="true" type="tns:CommerceServiceErrorResult"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="CommerceServiceResultBase" nillable="true" type="tns:CommerceServiceResultBase"/>
+            <xs:complexType name="CommerceServiceErrorResult">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="Code" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="Detail" nillable="true" type="q1:ArrayOfKeyValueOfstringstring"
+                                xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="CommerceServiceErrorResult" nillable="true" type="tns:CommerceServiceErrorResult"/>
+        </xs:schema>
+        <xs:schema elementFormDefault="qualified" targetNamespace="EFSchools.Englishtown.Commerce.Client.FeatureAccess"
+                   xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="EFSchools.Englishtown.Commerce.Client.FeatureAccess">
+            <xs:complexType name="FeatureAccessGrant">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>&lt;summary&gt;
+
+                        &lt;/summary&gt;</xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element name="Member_id" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>&lt;summary&gt;
+
+                                &lt;/summary&gt;</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="SalesOrder_id" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>&lt;summary&gt;
+
+                                &lt;/summary&gt;</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="FeatureAccess_id" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>&lt;summary&gt;
+
+                                &lt;/summary&gt;</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="Quantity" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>&lt;summary&gt;
+
+                                &lt;/summary&gt;</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="ActiveFrom" type="xs:dateTime">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>&lt;summary&gt;
+
+                                &lt;/summary&gt;</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ActiveTo" type="xs:dateTime">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>&lt;summary&gt;
+
+                                &lt;/summary&gt;</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="DurationDays" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>&lt;summary&gt;
+
+                                &lt;/summary&gt;</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="BufferLength" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>&lt;summary&gt;
+
+                                &lt;/summary&gt;</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="RemainLength" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>&lt;summary&gt;
+
+                                &lt;/summary&gt;</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="Feature_id" type="xs:int"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="FeatureAccessGrant" nillable="true" type="tns:FeatureAccessGrant"/>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="ISubscriptionService_ExtendCurrentSubscription_InputMessage">
+        <wsdl:part name="parameters" element="tns:ExtendCurrentSubscription"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_ExtendCurrentSubscription_OutputMessage">
+        <wsdl:part name="parameters" element="tns:ExtendCurrentSubscriptionResponse"/>
+    </wsdl:message>
+    <wsdl:message
+            name="ISubscriptionService_ExtendCurrentSubscription_CommerceServiceExceptionDetailFault_FaultMessage">
+        <wsdl:part name="detail" element="q1:CommerceServiceExceptionDetail"
+                   xmlns:q1="EFSchools.Englishtown.Commerce.Client.Exceptions"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_CancelSubscription_InputMessage">
+        <wsdl:part name="parameters" element="tns:CancelSubscription"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_CancelSubscription_OutputMessage">
+        <wsdl:part name="parameters" element="tns:CancelSubscriptionResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_CancelSubscription_CommerceServiceExceptionDetailFault_FaultMessage">
+        <wsdl:part name="detail" element="q2:CommerceServiceExceptionDetail"
+                   xmlns:q2="EFSchools.Englishtown.Commerce.Client.Exceptions"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_MarkForCancellation_InputMessage">
+        <wsdl:part name="parameters" element="tns:MarkForCancellation"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_MarkForCancellation_OutputMessage">
+        <wsdl:part name="parameters" element="tns:MarkForCancellationResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_MarkForCancellation_CommerceServiceExceptionDetailFault_FaultMessage">
+        <wsdl:part name="detail" element="q3:CommerceServiceExceptionDetail"
+                   xmlns:q3="EFSchools.Englishtown.Commerce.Client.Exceptions"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_MarkForCancellationWithMultipleReasons_InputMessage">
+        <wsdl:part name="parameters" element="tns:MarkForCancellationWithMultipleReasons"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_MarkForCancellationWithMultipleReasons_OutputMessage">
+        <wsdl:part name="parameters" element="tns:MarkForCancellationWithMultipleReasonsResponse"/>
+    </wsdl:message>
+    <wsdl:message
+            name="ISubscriptionService_MarkForCancellationWithMultipleReasons_CommerceServiceExceptionDetailFault_FaultMessage">
+        <wsdl:part name="detail" element="q4:CommerceServiceExceptionDetail"
+                   xmlns:q4="EFSchools.Englishtown.Commerce.Client.Exceptions"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_UndoMarkForCancellation_InputMessage">
+        <wsdl:part name="parameters" element="tns:UndoMarkForCancellation"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_UndoMarkForCancellation_OutputMessage">
+        <wsdl:part name="parameters" element="tns:UndoMarkForCancellationResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_UndoMarkForCancellation_CommerceServiceExceptionDetailFault_FaultMessage">
+        <wsdl:part name="detail" element="q5:CommerceServiceExceptionDetail"
+                   xmlns:q5="EFSchools.Englishtown.Commerce.Client.Exceptions"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_GetActiveSubscription_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetActiveSubscription"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_GetActiveSubscription_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetActiveSubscriptionResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_GetActiveSubscription_CommerceServiceExceptionDetailFault_FaultMessage">
+        <wsdl:part name="detail" element="q6:CommerceServiceExceptionDetail"
+                   xmlns:q6="EFSchools.Englishtown.Commerce.Client.Exceptions"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_GetAllSubscriptions_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetAllSubscriptions"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_GetAllSubscriptions_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetAllSubscriptionsResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_GetAllSubscriptions_CommerceServiceExceptionDetailFault_FaultMessage">
+        <wsdl:part name="detail" element="q7:CommerceServiceExceptionDetail"
+                   xmlns:q7="EFSchools.Englishtown.Commerce.Client.Exceptions"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_GetBatchSubscriptions_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetBatchSubscriptions"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_GetBatchSubscriptions_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetBatchSubscriptionsResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_GetBatchSubscriptions_CommerceServiceExceptionDetailFault_FaultMessage">
+        <wsdl:part name="detail" element="q8:CommerceServiceExceptionDetail"
+                   xmlns:q8="EFSchools.Englishtown.Commerce.Client.Exceptions"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_AddFeatureAccessGrants_InputMessage">
+        <wsdl:part name="parameters" element="tns:AddFeatureAccessGrants"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_AddFeatureAccessGrants_OutputMessage">
+        <wsdl:part name="parameters" element="tns:AddFeatureAccessGrantsResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_AddFeatureAccessGrants_CommerceServiceExceptionDetailFault_FaultMessage">
+        <wsdl:part name="detail" element="q9:CommerceServiceExceptionDetail"
+                   xmlns:q9="EFSchools.Englishtown.Commerce.Client.Exceptions"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_ChargeFeatureAccess_InputMessage">
+        <wsdl:part name="parameters" element="tns:ChargeFeatureAccess"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_ChargeFeatureAccess_OutputMessage">
+        <wsdl:part name="parameters" element="tns:ChargeFeatureAccessResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_ChargeFeatureAccess_CommerceServiceExceptionDetailFault_FaultMessage">
+        <wsdl:part name="detail" element="q10:CommerceServiceExceptionDetail"
+                   xmlns:q10="EFSchools.Englishtown.Commerce.Client.Exceptions"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_IsRecurringOrder_InputMessage">
+        <wsdl:part name="parameters" element="tns:IsRecurringOrder"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_IsRecurringOrder_OutputMessage">
+        <wsdl:part name="parameters" element="tns:IsRecurringOrderResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_IsRecurringOrder_CommerceServiceExceptionDetailFault_FaultMessage">
+        <wsdl:part name="detail" element="q11:CommerceServiceExceptionDetail"
+                   xmlns:q11="EFSchools.Englishtown.Commerce.Client.Exceptions"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_LicenseTransferByMemberId_InputMessage">
+        <wsdl:part name="parameters" element="tns:LicenseTransferByMemberId"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_LicenseTransferByMemberId_OutputMessage">
+        <wsdl:part name="parameters" element="tns:LicenseTransferByMemberIdResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_GetSuspendedSubscription_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetSuspendedSubscription"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_GetSuspendedSubscription_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetSuspendedSubscriptionResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_GetSuspendedSubscription_CommerceServiceExceptionDetailFault_FaultMessage">
+        <wsdl:part name="detail" element="q12:CommerceServiceExceptionDetail"
+                   xmlns:q12="EFSchools.Englishtown.Commerce.Client.Exceptions"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_LogChargebackProcess_InputMessage">
+        <wsdl:part name="parameters" element="tns:LogChargebackProcess"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_LogChargebackProcess_OutputMessage">
+        <wsdl:part name="parameters" element="tns:LogChargebackProcessResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionService_LogChargebackProcess_CommerceServiceExceptionDetailFault_FaultMessage">
+        <wsdl:part name="detail" element="q13:CommerceServiceExceptionDetail"
+                   xmlns:q13="EFSchools.Englishtown.Commerce.Client.Exceptions"/>
+    </wsdl:message>
+    <wsdl:portType name="ISubscriptionService">
+        <wsdl:documentation>&lt;summary&gt;&#xD;
+            &#xD;
+            &lt;/summary&gt;</wsdl:documentation>
+        <wsdl:operation name="ExtendCurrentSubscription">
+            <wsdl:documentation>&lt;summary&gt;&#xD;
+                &#xD;
+                &lt;/summary&gt;&#xD;
+                &lt;param name="member_id"&gt;&lt;/param&gt;&#xD;
+                &lt;param name="extendDays"&gt;&lt;/param&gt;&#xD;
+                &lt;param name="reason"&gt;&lt;/param&gt;&#xD;
+                &lt;param name="comments"&gt;&lt;/param&gt;&#xD;
+                &lt;param name="systemNotes"&gt;&lt;/param&gt;&#xD;
+                &lt;returns&gt;&lt;/returns&gt;&#xD;
+                &lt;remarks&gt;Make sure there have record in the table 'OrderDurationChgReason_lkp' according to the
+                reason.&lt;/remarks&gt;</wsdl:documentation>
+            <wsdl:input wsaw:Action="http://tempuri.org/ISubscriptionService/ExtendCurrentSubscription"
+                        message="tns:ISubscriptionService_ExtendCurrentSubscription_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ISubscriptionService/ExtendCurrentSubscriptionResponse"
+                         message="tns:ISubscriptionService_ExtendCurrentSubscription_OutputMessage"/>
+            <wsdl:fault
+                    wsaw:Action="http://tempuri.org/ISubscriptionService/ExtendCurrentSubscriptionCommerceServiceExceptionDetailFault"
+                    name="CommerceServiceExceptionDetailFault"
+                    message="tns:ISubscriptionService_ExtendCurrentSubscription_CommerceServiceExceptionDetailFault_FaultMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="CancelSubscription">
+            <wsdl:documentation>&lt;summary&gt;&#xD;
+                &#xD;
+                &lt;/summary&gt;&#xD;
+                &lt;param name="member_id"&gt;&lt;/param&gt;&#xD;
+                &lt;param name="reason"&gt;&lt;/param&gt;&#xD;
+                &lt;param name="comments"&gt;&lt;/param&gt;&#xD;
+                &lt;param name="systemNotes"&gt;&lt;/param&gt;&#xD;
+                &lt;returns&gt;&lt;/returns&gt;&#xD;
+                &lt;remarks&gt;Make sure there have record in the table 'OrderCancellationReason_lkp' according to the
+                reason.&lt;/remarks&gt;</wsdl:documentation>
+            <wsdl:input wsaw:Action="http://tempuri.org/ISubscriptionService/CancelSubscription"
+                        message="tns:ISubscriptionService_CancelSubscription_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ISubscriptionService/CancelSubscriptionResponse"
+                         message="tns:ISubscriptionService_CancelSubscription_OutputMessage"/>
+            <wsdl:fault
+                    wsaw:Action="http://tempuri.org/ISubscriptionService/CancelSubscriptionCommerceServiceExceptionDetailFault"
+                    name="CommerceServiceExceptionDetailFault"
+                    message="tns:ISubscriptionService_CancelSubscription_CommerceServiceExceptionDetailFault_FaultMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="MarkForCancellation">
+            <wsdl:documentation>&lt;summary&gt;&#xD;
+                &#xD;
+                &lt;/summary&gt;&#xD;
+                &lt;param name="member_id"&gt;&lt;/param&gt;&#xD;
+                &lt;param name="reason"&gt;&lt;/param&gt;&#xD;
+                &lt;param name="comments"&gt;&lt;/param&gt;&#xD;
+                &lt;returns&gt;&lt;/returns&gt;</wsdl:documentation>
+            <wsdl:input wsaw:Action="http://tempuri.org/ISubscriptionService/MarkForCancellation"
+                        message="tns:ISubscriptionService_MarkForCancellation_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ISubscriptionService/MarkForCancellationResponse"
+                         message="tns:ISubscriptionService_MarkForCancellation_OutputMessage"/>
+            <wsdl:fault
+                    wsaw:Action="http://tempuri.org/ISubscriptionService/MarkForCancellationCommerceServiceExceptionDetailFault"
+                    name="CommerceServiceExceptionDetailFault"
+                    message="tns:ISubscriptionService_MarkForCancellation_CommerceServiceExceptionDetailFault_FaultMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="MarkForCancellationWithMultipleReasons">
+            <wsdl:documentation>&lt;summary&gt;&#xD;
+                &#xD;
+                &lt;/summary&gt;&#xD;
+                &lt;param name="member_id"&gt;&lt;/param&gt;&#xD;
+                &lt;param name="categoryCode"&gt;&lt;/param&gt;&#xD;
+                &lt;param name="note"&gt;&lt;/param&gt;&#xD;
+                &lt;param name="comments"&gt;&lt;/param&gt;&#xD;
+                &lt;param name="isCancelledByStudent"&gt;&lt;/param&gt;&#xD;
+                &lt;param name="reasonCodes"&gt;&lt;/param&gt;</wsdl:documentation>
+            <wsdl:input wsaw:Action="http://tempuri.org/ISubscriptionService/MarkForCancellationWithMultipleReasons"
+                        message="tns:ISubscriptionService_MarkForCancellationWithMultipleReasons_InputMessage"/>
+            <wsdl:output
+                    wsaw:Action="http://tempuri.org/ISubscriptionService/MarkForCancellationWithMultipleReasonsResponse"
+                    message="tns:ISubscriptionService_MarkForCancellationWithMultipleReasons_OutputMessage"/>
+            <wsdl:fault
+                    wsaw:Action="http://tempuri.org/ISubscriptionService/MarkForCancellationWithMultipleReasonsCommerceServiceExceptionDetailFault"
+                    name="CommerceServiceExceptionDetailFault"
+                    message="tns:ISubscriptionService_MarkForCancellationWithMultipleReasons_CommerceServiceExceptionDetailFault_FaultMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="UndoMarkForCancellation">
+            <wsdl:documentation>&lt;summary&gt;&#xD;
+                &#xD;
+                &lt;/summary&gt;&#xD;
+                &lt;param name="member_id"&gt;&lt;/param&gt;&#xD;
+                &lt;param name="comments"&gt;&lt;/param&gt;</wsdl:documentation>
+            <wsdl:input wsaw:Action="http://tempuri.org/ISubscriptionService/UndoMarkForCancellation"
+                        message="tns:ISubscriptionService_UndoMarkForCancellation_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ISubscriptionService/UndoMarkForCancellationResponse"
+                         message="tns:ISubscriptionService_UndoMarkForCancellation_OutputMessage"/>
+            <wsdl:fault
+                    wsaw:Action="http://tempuri.org/ISubscriptionService/UndoMarkForCancellationCommerceServiceExceptionDetailFault"
+                    name="CommerceServiceExceptionDetailFault"
+                    message="tns:ISubscriptionService_UndoMarkForCancellation_CommerceServiceExceptionDetailFault_FaultMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetActiveSubscription">
+            <wsdl:documentation>&lt;summary&gt;&#xD;
+                &#xD;
+                &lt;/summary&gt;&#xD;
+                &lt;param name="member_id"&gt;&lt;/param&gt;&#xD;
+                &lt;returns&gt;&lt;/returns&gt;</wsdl:documentation>
+            <wsdl:input wsaw:Action="http://tempuri.org/ISubscriptionService/GetActiveSubscription"
+                        message="tns:ISubscriptionService_GetActiveSubscription_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ISubscriptionService/GetActiveSubscriptionResponse"
+                         message="tns:ISubscriptionService_GetActiveSubscription_OutputMessage"/>
+            <wsdl:fault
+                    wsaw:Action="http://tempuri.org/ISubscriptionService/GetActiveSubscriptionCommerceServiceExceptionDetailFault"
+                    name="CommerceServiceExceptionDetailFault"
+                    message="tns:ISubscriptionService_GetActiveSubscription_CommerceServiceExceptionDetailFault_FaultMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetAllSubscriptions">
+            <wsdl:documentation>&lt;summary&gt;&#xD;
+                Get all subscriptions of the member&#xD;
+                &lt;/summary&gt;&#xD;
+                &lt;param name="member_id"&gt;&lt;/param&gt;&#xD;
+                &lt;returns&gt;&lt;/returns&gt;</wsdl:documentation>
+            <wsdl:input wsaw:Action="http://tempuri.org/ISubscriptionService/GetAllSubscriptions"
+                        message="tns:ISubscriptionService_GetAllSubscriptions_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ISubscriptionService/GetAllSubscriptionsResponse"
+                         message="tns:ISubscriptionService_GetAllSubscriptions_OutputMessage"/>
+            <wsdl:fault
+                    wsaw:Action="http://tempuri.org/ISubscriptionService/GetAllSubscriptionsCommerceServiceExceptionDetailFault"
+                    name="CommerceServiceExceptionDetailFault"
+                    message="tns:ISubscriptionService_GetAllSubscriptions_CommerceServiceExceptionDetailFault_FaultMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetBatchSubscriptions">
+            <wsdl:input wsaw:Action="http://tempuri.org/ISubscriptionService/GetBatchSubscriptions"
+                        message="tns:ISubscriptionService_GetBatchSubscriptions_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ISubscriptionService/GetBatchSubscriptionsResponse"
+                         message="tns:ISubscriptionService_GetBatchSubscriptions_OutputMessage"/>
+            <wsdl:fault
+                    wsaw:Action="http://tempuri.org/ISubscriptionService/GetBatchSubscriptionsCommerceServiceExceptionDetailFault"
+                    name="CommerceServiceExceptionDetailFault"
+                    message="tns:ISubscriptionService_GetBatchSubscriptions_CommerceServiceExceptionDetailFault_FaultMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="AddFeatureAccessGrants">
+            <wsdl:documentation>&lt;summary&gt;&#xD;
+                &#xD;
+                &lt;/summary&gt;&#xD;
+                &lt;param name="grant"&gt;&lt;/param&gt;&#xD;
+                &lt;returns&gt;&lt;/returns&gt;&#xD;
+                &lt;remarks&gt;&#xD;
+                1.Add feature access grants base on parameters&#xD;
+                2.Add record into FAG_ProcessHistory&#xD;
+                &lt;/remarks&gt;</wsdl:documentation>
+            <wsdl:input wsaw:Action="http://tempuri.org/ISubscriptionService/AddFeatureAccessGrants"
+                        message="tns:ISubscriptionService_AddFeatureAccessGrants_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ISubscriptionService/AddFeatureAccessGrantsResponse"
+                         message="tns:ISubscriptionService_AddFeatureAccessGrants_OutputMessage"/>
+            <wsdl:fault
+                    wsaw:Action="http://tempuri.org/ISubscriptionService/AddFeatureAccessGrantsCommerceServiceExceptionDetailFault"
+                    name="CommerceServiceExceptionDetailFault"
+                    message="tns:ISubscriptionService_AddFeatureAccessGrants_CommerceServiceExceptionDetailFault_FaultMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="ChargeFeatureAccess">
+            <wsdl:documentation>&lt;summary&gt;&#xD;
+                &#xD;
+                &lt;/summary&gt;&#xD;
+                &lt;param name="member_id"&gt;&lt;/param&gt;&#xD;
+                &lt;param name="featureAccess_id"&gt;&lt;/param&gt;&#xD;
+                &lt;param name="chargeDate"&gt;&lt;/param&gt;&#xD;
+                &lt;returns&gt;&lt;/returns&gt;</wsdl:documentation>
+            <wsdl:input wsaw:Action="http://tempuri.org/ISubscriptionService/ChargeFeatureAccess"
+                        message="tns:ISubscriptionService_ChargeFeatureAccess_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ISubscriptionService/ChargeFeatureAccessResponse"
+                         message="tns:ISubscriptionService_ChargeFeatureAccess_OutputMessage"/>
+            <wsdl:fault
+                    wsaw:Action="http://tempuri.org/ISubscriptionService/ChargeFeatureAccessCommerceServiceExceptionDetailFault"
+                    name="CommerceServiceExceptionDetailFault"
+                    message="tns:ISubscriptionService_ChargeFeatureAccess_CommerceServiceExceptionDetailFault_FaultMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="IsRecurringOrder">
+            <wsdl:documentation>&lt;summary&gt;&#xD;
+                &#xD;
+                &lt;/summary&gt;&#xD;
+                &lt;param name="order_id"&gt;&lt;/param&gt;&#xD;
+                &lt;returns&gt;&lt;/returns&gt;</wsdl:documentation>
+            <wsdl:input wsaw:Action="http://tempuri.org/ISubscriptionService/IsRecurringOrder"
+                        message="tns:ISubscriptionService_IsRecurringOrder_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ISubscriptionService/IsRecurringOrderResponse"
+                         message="tns:ISubscriptionService_IsRecurringOrder_OutputMessage"/>
+            <wsdl:fault
+                    wsaw:Action="http://tempuri.org/ISubscriptionService/IsRecurringOrderCommerceServiceExceptionDetailFault"
+                    name="CommerceServiceExceptionDetailFault"
+                    message="tns:ISubscriptionService_IsRecurringOrder_CommerceServiceExceptionDetailFault_FaultMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="LicenseTransferByMemberId">
+            <wsdl:documentation>&lt;summary&gt;&#xD;
+                License transfer by specified memberId&#xD;
+                &lt;/summary&gt;&#xD;
+                &lt;param name="licenseTransferParams"&gt;&lt;/param&gt;&#xD;
+                &lt;returns&gt;&lt;/returns&gt;</wsdl:documentation>
+            <wsdl:input wsaw:Action="http://tempuri.org/ISubscriptionService/LicenseTransferByMemberId"
+                        message="tns:ISubscriptionService_LicenseTransferByMemberId_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ISubscriptionService/LicenseTransferByMemberIdResponse"
+                         message="tns:ISubscriptionService_LicenseTransferByMemberId_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetSuspendedSubscription">
+            <wsdl:documentation>&lt;summary&gt;&#xD;
+                Get suspended subscription or null for specific user&#xD;
+                &lt;/summary&gt;&#xD;
+                &lt;param name="member_id"&gt;&lt;/param&gt;&#xD;
+                &lt;returns&gt;&lt;/returns&gt;</wsdl:documentation>
+            <wsdl:input wsaw:Action="http://tempuri.org/ISubscriptionService/GetSuspendedSubscription"
+                        message="tns:ISubscriptionService_GetSuspendedSubscription_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ISubscriptionService/GetSuspendedSubscriptionResponse"
+                         message="tns:ISubscriptionService_GetSuspendedSubscription_OutputMessage"/>
+            <wsdl:fault
+                    wsaw:Action="http://tempuri.org/ISubscriptionService/GetSuspendedSubscriptionCommerceServiceExceptionDetailFault"
+                    name="CommerceServiceExceptionDetailFault"
+                    message="tns:ISubscriptionService_GetSuspendedSubscription_CommerceServiceExceptionDetailFault_FaultMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="LogChargebackProcess">
+            <wsdl:documentation>&lt;summary&gt;&#xD;
+                Update Chargeback Process Result&#xD;
+                &lt;/summary&gt;&#xD;
+                &lt;param name="salesOrder_id"&gt;&lt;/param&gt;&#xD;
+                &lt;returns&gt;&lt;/returns&gt;</wsdl:documentation>
+            <wsdl:input wsaw:Action="http://tempuri.org/ISubscriptionService/LogChargebackProcess"
+                        message="tns:ISubscriptionService_LogChargebackProcess_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ISubscriptionService/LogChargebackProcessResponse"
+                         message="tns:ISubscriptionService_LogChargebackProcess_OutputMessage"/>
+            <wsdl:fault
+                    wsaw:Action="http://tempuri.org/ISubscriptionService/LogChargebackProcessCommerceServiceExceptionDetailFault"
+                    name="CommerceServiceExceptionDetailFault"
+                    message="tns:ISubscriptionService_LogChargebackProcess_CommerceServiceExceptionDetailFault_FaultMessage"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="NetTcpBinding_ISubscriptionService" type="tns:ISubscriptionService">
+        <wsp:PolicyReference URI="#NetTcpBinding_ISubscriptionService_policy"/>
+        <soap12:binding transport="http://schemas.microsoft.com/soap/tcp"/>
+        <wsdl:operation name="ExtendCurrentSubscription">
+            <soap12:operation soapAction="http://tempuri.org/ISubscriptionService/ExtendCurrentSubscription"
+                              style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CommerceServiceExceptionDetailFault">
+                <soap12:fault use="literal" name="CommerceServiceExceptionDetailFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="CancelSubscription">
+            <soap12:operation soapAction="http://tempuri.org/ISubscriptionService/CancelSubscription" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CommerceServiceExceptionDetailFault">
+                <soap12:fault use="literal" name="CommerceServiceExceptionDetailFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="MarkForCancellation">
+            <soap12:operation soapAction="http://tempuri.org/ISubscriptionService/MarkForCancellation"
+                              style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CommerceServiceExceptionDetailFault">
+                <soap12:fault use="literal" name="CommerceServiceExceptionDetailFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="MarkForCancellationWithMultipleReasons">
+            <soap12:operation
+                    soapAction="http://tempuri.org/ISubscriptionService/MarkForCancellationWithMultipleReasons"
+                    style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CommerceServiceExceptionDetailFault">
+                <soap12:fault use="literal" name="CommerceServiceExceptionDetailFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="UndoMarkForCancellation">
+            <soap12:operation soapAction="http://tempuri.org/ISubscriptionService/UndoMarkForCancellation"
+                              style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CommerceServiceExceptionDetailFault">
+                <soap12:fault use="literal" name="CommerceServiceExceptionDetailFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="GetActiveSubscription">
+            <soap12:operation soapAction="http://tempuri.org/ISubscriptionService/GetActiveSubscription"
+                              style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CommerceServiceExceptionDetailFault">
+                <soap12:fault use="literal" name="CommerceServiceExceptionDetailFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="GetAllSubscriptions">
+            <soap12:operation soapAction="http://tempuri.org/ISubscriptionService/GetAllSubscriptions"
+                              style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CommerceServiceExceptionDetailFault">
+                <soap12:fault use="literal" name="CommerceServiceExceptionDetailFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="GetBatchSubscriptions">
+            <soap12:operation soapAction="http://tempuri.org/ISubscriptionService/GetBatchSubscriptions"
+                              style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CommerceServiceExceptionDetailFault">
+                <soap12:fault use="literal" name="CommerceServiceExceptionDetailFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="AddFeatureAccessGrants">
+            <soap12:operation soapAction="http://tempuri.org/ISubscriptionService/AddFeatureAccessGrants"
+                              style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CommerceServiceExceptionDetailFault">
+                <soap12:fault use="literal" name="CommerceServiceExceptionDetailFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="ChargeFeatureAccess">
+            <soap12:operation soapAction="http://tempuri.org/ISubscriptionService/ChargeFeatureAccess"
+                              style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CommerceServiceExceptionDetailFault">
+                <soap12:fault use="literal" name="CommerceServiceExceptionDetailFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="IsRecurringOrder">
+            <soap12:operation soapAction="http://tempuri.org/ISubscriptionService/IsRecurringOrder" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CommerceServiceExceptionDetailFault">
+                <soap12:fault use="literal" name="CommerceServiceExceptionDetailFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="LicenseTransferByMemberId">
+            <soap12:operation soapAction="http://tempuri.org/ISubscriptionService/LicenseTransferByMemberId"
+                              style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetSuspendedSubscription">
+            <soap12:operation soapAction="http://tempuri.org/ISubscriptionService/GetSuspendedSubscription"
+                              style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CommerceServiceExceptionDetailFault">
+                <soap12:fault use="literal" name="CommerceServiceExceptionDetailFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="LogChargebackProcess">
+            <soap12:operation soapAction="http://tempuri.org/ISubscriptionService/LogChargebackProcess"
+                              style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CommerceServiceExceptionDetailFault">
+                <soap12:fault use="literal" name="CommerceServiceExceptionDetailFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="BasicHttpBinding_ISubscriptionService" type="tns:ISubscriptionService">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="ExtendCurrentSubscription">
+            <soap:operation soapAction="http://tempuri.org/ISubscriptionService/ExtendCurrentSubscription"
+                            style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CommerceServiceExceptionDetailFault">
+                <soap:fault use="literal" name="CommerceServiceExceptionDetailFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="CancelSubscription">
+            <soap:operation soapAction="http://tempuri.org/ISubscriptionService/CancelSubscription" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CommerceServiceExceptionDetailFault">
+                <soap:fault use="literal" name="CommerceServiceExceptionDetailFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="MarkForCancellation">
+            <soap:operation soapAction="http://tempuri.org/ISubscriptionService/MarkForCancellation" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CommerceServiceExceptionDetailFault">
+                <soap:fault use="literal" name="CommerceServiceExceptionDetailFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="MarkForCancellationWithMultipleReasons">
+            <soap:operation soapAction="http://tempuri.org/ISubscriptionService/MarkForCancellationWithMultipleReasons"
+                            style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CommerceServiceExceptionDetailFault">
+                <soap:fault use="literal" name="CommerceServiceExceptionDetailFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="UndoMarkForCancellation">
+            <soap:operation soapAction="http://tempuri.org/ISubscriptionService/UndoMarkForCancellation"
+                            style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CommerceServiceExceptionDetailFault">
+                <soap:fault use="literal" name="CommerceServiceExceptionDetailFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="GetActiveSubscription">
+            <soap:operation soapAction="http://tempuri.org/ISubscriptionService/GetActiveSubscription"
+                            style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CommerceServiceExceptionDetailFault">
+                <soap:fault use="literal" name="CommerceServiceExceptionDetailFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="GetAllSubscriptions">
+            <soap:operation soapAction="http://tempuri.org/ISubscriptionService/GetAllSubscriptions" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CommerceServiceExceptionDetailFault">
+                <soap:fault use="literal" name="CommerceServiceExceptionDetailFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="GetBatchSubscriptions">
+            <soap:operation soapAction="http://tempuri.org/ISubscriptionService/GetBatchSubscriptions"
+                            style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CommerceServiceExceptionDetailFault">
+                <soap:fault use="literal" name="CommerceServiceExceptionDetailFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="AddFeatureAccessGrants">
+            <soap:operation soapAction="http://tempuri.org/ISubscriptionService/AddFeatureAccessGrants"
+                            style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CommerceServiceExceptionDetailFault">
+                <soap:fault use="literal" name="CommerceServiceExceptionDetailFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="ChargeFeatureAccess">
+            <soap:operation soapAction="http://tempuri.org/ISubscriptionService/ChargeFeatureAccess" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CommerceServiceExceptionDetailFault">
+                <soap:fault use="literal" name="CommerceServiceExceptionDetailFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="IsRecurringOrder">
+            <soap:operation soapAction="http://tempuri.org/ISubscriptionService/IsRecurringOrder" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CommerceServiceExceptionDetailFault">
+                <soap:fault use="literal" name="CommerceServiceExceptionDetailFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="LicenseTransferByMemberId">
+            <soap:operation soapAction="http://tempuri.org/ISubscriptionService/LicenseTransferByMemberId"
+                            style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetSuspendedSubscription">
+            <soap:operation soapAction="http://tempuri.org/ISubscriptionService/GetSuspendedSubscription"
+                            style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CommerceServiceExceptionDetailFault">
+                <soap:fault use="literal" name="CommerceServiceExceptionDetailFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="LogChargebackProcess">
+            <soap:operation soapAction="http://tempuri.org/ISubscriptionService/LogChargebackProcess" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CommerceServiceExceptionDetailFault">
+                <soap:fault use="literal" name="CommerceServiceExceptionDetailFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="SubscriptionService">
+        <wsdl:port name="NetTcpBinding_ISubscriptionService" binding="tns:NetTcpBinding_ISubscriptionService">
+            <soap12:address location="net.tcp://martincui-lt.ef.com/services/commerce/1.0/SubscriptionService.svc"/>
+            <wsa10:EndpointReference>
+                <wsa10:Address>net.tcp://martincui-lt.ef.com/services/commerce/1.0/SubscriptionService.svc
+                </wsa10:Address>
+            </wsa10:EndpointReference>
+        </wsdl:port>
+        <wsdl:port name="BasicHttpBinding_ISubscriptionService" binding="tns:BasicHttpBinding_ISubscriptionService">
+            <soap:address location="http://martincui-lt.ef.com/services/commerce/1.0/SubscriptionService.svc"/>
+        </wsdl:port>
+        <wsdl:port name="Local" binding="tns:BasicHttpBinding_ISubscriptionService">
+            <soap:address location="http://local.englishtown.com/services/commerce/1.0/SubscriptionService.svc"/>
+        </wsdl:port>
+        <wsdl:port name="QA" binding="tns:BasicHttpBinding_ISubscriptionService">
+            <soap:address location="http://qa.englishtown.com/services/commerce/1.0/SubscriptionService.svc"/>
+        </wsdl:port>
+        <wsdl:port name="Staging" binding="tns:BasicHttpBinding_ISubscriptionService">
+            <soap:address location="http://staging.englishtown.com/services/commerce/1.0/SubscriptionService.svc"/>
+        </wsdl:port>
+        <wsdl:port name="Live" binding="tns:BasicHttpBinding_ISubscriptionService">
+            <soap:address location="http://www.englishtown.com/services/commerce/1.0/SubscriptionService.svc"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
