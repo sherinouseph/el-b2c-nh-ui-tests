@@ -1,8 +1,0 @@
-#--------------------------------------------------------------------------------
-# SA home page COMPOSITE speck
-# Date : 01/01/2017
-#--------------------------------------------------------------------------------
-#
-@import modules/sa/homepage_header_sa.gspec
-@import modules/homepage_footer_it.gspec
-@import modules/sa/homepage_content_sa.gspec
