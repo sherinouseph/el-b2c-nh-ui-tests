@@ -8,7 +8,6 @@ package com.englishtown.helpers;
 import com.englishtown.driver.BaseRemoteWebDriver;
 import com.englishtown.helpers.utils.TestUtil;
 import com.englishtown.pages.core.BasePage;
-import com.englishtown.pages.cq.CqEditAuthoringPage;
 //import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.*;
@@ -737,30 +736,6 @@ public class WebElementHelper<T> {
      * @param sourceElement
      * Note : is not working draging to a frame in cq  stale
      */
-    public static void dragAndDrop(WebDriver driver, WebElement sourceElement){ //, WebElement destinationElement) {
-        try {
-            //if (sourceElement.isDisplayed() && destinationElement.isDisplayed()) {
-                Actions action = new Actions(driver);
-                action.clickAndHold(sourceElement).build().perform();
-            WebDriverWindowHelper.switchToFrameByFrameId(driver, CqEditAuthoringPage.getFrameName(), 15);
-            CqEditAuthoringPage cqEditAuthoringPage = new CqEditAuthoringPage(driver);
-            WebElement toWe = cqEditAuthoringPage.dropContainerListWe.get(0);
-            log.info(toWe.getLocation().toString());
-                action.moveToElement(toWe, 3, 3).click().build().perform();
-                action.release(toWe).build().perform();
-
-                action.dragAndDrop(sourceElement, toWe).build().perform();       //Actions dragdrop = new Actions(driver);  dragdrop.clickAndHold(source).moveToElement(target).release(target).build().perform();
-           // } else {
-           //     BasePage.failTest("Element was not displayed; Can not do drag/drop on invisible element ...!");
-           // }
-        } catch (StaleElementReferenceException e) {
-            //BasePage.failTest("Element with " + sourceElement + "or" + destinationElement + "is not attached to the page document " + e.getCause());
-        } catch (NoSuchElementException e) {
-            //BasePage.failTest("Element " + sourceElement + "or" + destinationElement + " was not found in DOM "+ e.getCause());
-        } catch (Exception e) {
-            BasePage.failTest("Error occurred while performing drag and drop operation "+ e.getCause());
-        }
-    }
 
     public static void doubleClick(WebDriver driver, WebElement element) {
         try {

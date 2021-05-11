@@ -6,7 +6,6 @@ package com.englishtown.newhouse.school.pages.core;
  */
 
 import com.englishtown.helpers.utils.TestUtil;
-import com.englishtown.newhouse.salesforce.pages.core.SalesForceConstants;
 import com.englishtown.pages.core.BasePage;
 import org.openqa.selenium.WebDriver;
 
@@ -29,16 +28,6 @@ public class SchoolConstants {
         return currTime;
     }
 
-    public static synchronized void setCurrTime(Long currTime) {
-        setCurrTimeSafe(currTime);
-        SalesForceConstants.currTime = currTime;
-    }
-
-    public static void setCurrTimeSafe(Long currTime) {
-        if (SalesForceConstants.currTime == currTime) {
-            SalesForceConstants.currTime = System.currentTimeMillis();
-        }
-    }
 
     public static void dumpMap(Map mp) {
         Iterator it = mp.entrySet().iterator();

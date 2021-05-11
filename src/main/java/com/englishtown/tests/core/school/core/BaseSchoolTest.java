@@ -118,20 +118,6 @@ public class BaseSchoolTest extends BaseTestHelper implements ISchoolTest {
     @AfterSuite
     protected void teardownAfterBaseSchoolTest(){
         logger.info("@ after suite ...!");
-
-        if(null != userBeanList && !userBeanList.isEmpty()) {
-            for (ChatTestUserBean user : userBeanList) {
-                if (StringUtils.containsIgnoreCase(getENVIRONMENT(), "live")) {
-                    cancelUserSubscription(user.getUserName());
-                } else {
-                    logger.info("Subscription for user {{}} is not canceled as this is not live ENV ...!", getUserEmail());
-                }
-
-            }
-        } else
-            logger.info("Nothing to cancel as User bean list is empty ....!");
-
-
     }
 
     public void initSchoolHeaderPage(){

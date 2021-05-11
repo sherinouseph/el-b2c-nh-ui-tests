@@ -4,6 +4,7 @@ package com.englishtown.tests.core;
  * Date: 04/09/14    *  *
  */
 import com.englishtown.pages.core.Page;
+import com.galenframework.reports.model.PageTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

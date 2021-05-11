@@ -156,7 +156,7 @@
     <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-io:9.4.15.v20190215" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.jetty.websocket:websocket-common:9.4.15.v20190215" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.jetty.websocket:websocket-api:9.4.15.v20190215" level="project" />
-    <orderEntry type="library" name="Maven: org.awaitility:awaitility:4.0.3" level="project" />
+    <orderEntry type="library" name="Maven: org.awaitility:awaitility:4.1.0" level="project" />
     <orderEntry type="library" name="Maven: org.hamcrest:hamcrest:2.1" level="project" />
     <orderEntry type="library" name="Maven: org.assertj:assertj-core:3.19.0" level="project" />
     <orderEntry type="library" name="Maven: co.poynt.postman.runner:postman-runner:2.0.2" level="project" />

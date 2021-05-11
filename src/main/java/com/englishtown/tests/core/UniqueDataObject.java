@@ -2,7 +2,6 @@ package com.englishtown.tests.core;
 
 import com.englishtown.helpers.WebElementHelper;
 import com.englishtown.helpers.utils.TestUtil;
-import com.englishtown.tests.checkout.common.core.NewBaseCheckoutFlow;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
